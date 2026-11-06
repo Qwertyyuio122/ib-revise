@@ -1,6 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   Search,
   Moon,
@@ -9,6 +11,7 @@ import {
   Flag,
   Menu,
   X,
+  LogOut,
 } from 'lucide-react';
 import {
   DUMMY_SUBJECTS,
@@ -17,6 +20,7 @@ import {
   DUMMY_USER,
 } from '@/data/dummy-data';
 import { Subject } from '@/types/database';
+import { createClient } from '@/lib/supabase/client';
 import { Sidebar } from '@/components/sidebar/Sidebar';
 import { PillButton } from '@/components/ui/PillButton';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -26,6 +30,7 @@ import { cn } from '@/lib/utils';
 type TopTab = 'Dashboard' | 'Revision Log' | 'Past Papers' | 'Milestones';
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TopTab>('Dashboard');
   const [selectedSubjectCode, setSelectedSubjectCode] = useState<string | null>(
     'BIO_HL'
@@ -37,6 +42,10 @@ export default function DashboardPage() {
   const [focusMode, setFocusMode] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const [userId, setUserId] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string>(DUMMY_USER.name);
+  const [userSession, setUserSession] = useState<string>(DUMMY_USER.session);
+
   const [drawerState, setDrawerState] = useState<{
     subject: Subject | null;
     mode: 'questions' | 'flashcards';
@@ -44,6 +53,49 @@ export default function DashboardPage() {
     subject: null,
     mode: 'questions',
   });
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) {
+        setUserId(null);
+        setUserName(DUMMY_USER.name);
+        setUserSession(DUMMY_USER.session);
+        return;
+      }
+
+      setUserId(user.id);
+      const metaName =
+        (user.user_metadata?.full_name as string | undefined) ||
+        user.email?.split('@')[0] ||
+        DUMMY_USER.name;
+      const metaSession =
+        (user.user_metadata?.exam_session as string | undefined) ||
+        DUMMY_USER.session;
+
+      setUserName(metaName);
+      setUserSession(metaSession);
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('full_name, exam_session')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (profile?.full_name) setUserName(profile.full_name);
+      if (profile?.exam_session) setUserSession(profile.exam_session);
+    });
+  }, []);
+
+  const handleSignOut = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    setUserId(null);
+    setUserName(DUMMY_USER.name);
+    setUserSession(DUMMY_USER.session);
+    router.refresh();
+  };
 
   const filteredSubjects = DUMMY_SUBJECTS.filter((s) => {
     if (!searchQuery.trim()) return true;
@@ -80,6 +132,10 @@ export default function DashboardPage() {
             selectedCoreCategory={selectedCoreCategory}
             onSelectCoreCategory={setSelectedCoreCategory}
             onStartStudySession={handleStartStudySession}
+            userName={userName}
+            userSession={userSession}
+            isAuthenticated={!!userId}
+            onSignOut={handleSignOut}
           />
         </div>
       )}
@@ -102,6 +158,10 @@ export default function DashboardPage() {
                 setMobileMenuOpen(false);
                 handleStartStudySession();
               }}
+              userName={userName}
+              userSession={userSession}
+              isAuthenticated={!!userId}
+              onSignOut={handleSignOut}
             />
             <button
               onClick={() => setMobileMenuOpen(false)}
@@ -192,12 +252,25 @@ export default function DashboardPage() {
               >
                 <Bell className="h-4 w-4" />
               </button>
-              <button
-                className="rounded-full p-2 text-text-secondary transition-colors hover:bg-surface-card hover:text-text-primary"
-                aria-label="Student profile"
-              >
-                <UserCircle2 className="h-4 w-4" />
-              </button>
+
+              {userId ? (
+                <button
+                  onClick={handleSignOut}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-card px-3 py-1.5 text-[12px] text-text-secondary transition-colors hover:border-accent-blush/35 hover:text-text-primary"
+                  title="Sign out"
+                >
+                  <LogOut className="h-3.5 w-3.5 text-accent-blush" />
+                  <span className="hidden sm:inline">Sign out</span>
+                </button>
+              ) : (
+                <Link
+                  href="/login"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-card px-3.5 py-1.5 text-[12px] font-medium text-text-primary transition-colors hover:border-accent-blush/35 hover:bg-surface-raised"
+                >
+                  <UserCircle2 className="h-3.5 w-3.5 text-accent-blush" />
+                  <span>Sign in</span>
+                </Link>
+              )}
             </div>
           </div>
         </header>
@@ -373,6 +446,7 @@ export default function DashboardPage() {
       <SampleDrawer
         subject={drawerState.subject}
         initialMode={drawerState.mode}
+        userId={userId}
         onClose={() => setDrawerState((prev) => ({ ...prev, subject: null }))}
       />
     </div>

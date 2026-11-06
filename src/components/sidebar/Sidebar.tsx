@@ -12,6 +12,8 @@ import {
   Lightbulb,
   FilePenLine,
   ClipboardCheck,
+  LogOut,
+  LogIn,
 } from 'lucide-react';
 import { DUMMY_SUBJECTS, DUMMY_USER } from '@/data/dummy-data';
 import { cn } from '@/lib/utils';
@@ -22,6 +24,10 @@ interface SidebarProps {
   selectedCoreCategory: string | null;
   onSelectCoreCategory: (category: string | null) => void;
   onStartStudySession: () => void;
+  userName?: string;
+  userSession?: string;
+  isAuthenticated?: boolean;
+  onSignOut?: () => void;
 }
 
 const SUBJECT_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -45,7 +51,18 @@ export function Sidebar({
   selectedCoreCategory,
   onSelectCoreCategory,
   onStartStudySession,
+  userName = DUMMY_USER.name,
+  userSession = DUMMY_USER.session,
+  isAuthenticated = false,
+  onSignOut,
 }: SidebarProps) {
+  const initials = userName
+    .split(' ')
+    .map((part) => part[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+
   return (
     <aside className="flex w-[260px] shrink-0 flex-col justify-between border-r border-border-subtle bg-surface-canvas px-4 py-6 select-none">
       <div className="space-y-7">
@@ -58,7 +75,7 @@ export function Sidebar({
             <span className="h-2 w-2 rounded-full bg-accent-blush shadow-[0_0_10px_#f4a7b9]" />
           </Link>
           <p className="mt-0.5 text-[13px] text-text-secondary">
-            {DUMMY_USER.session}
+            {userSession}
           </p>
         </div>
 
@@ -171,18 +188,40 @@ export function Sidebar({
         </div>
       </div>
 
-      <div className="mt-8 flex items-center gap-3 px-3 pt-4 border-t border-border-subtle/60">
-        <div className="flex h-8 w-8 items-center justify-center rounded-full border border-border-subtle bg-surface-raised text-[12px] font-medium text-accent-blush">
-          AM
+      <div className="mt-8 flex items-center justify-between gap-2 px-3 pt-4 border-t border-border-subtle/60">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-raised text-[12px] font-medium text-accent-blush">
+            {initials || 'IB'}
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-[13px] font-medium text-text-primary">
+              {userName}
+            </p>
+            <p className="truncate text-[12px] text-text-secondary">
+              {isAuthenticated ? userSession : `${userSession} • Guest`}
+            </p>
+          </div>
         </div>
-        <div className="min-w-0">
-          <p className="truncate text-[13px] font-medium text-text-primary">
-            {DUMMY_USER.name}
-          </p>
-          <p className="truncate text-[12px] text-text-secondary">
-            {DUMMY_USER.session}
-          </p>
-        </div>
+
+        {isAuthenticated ? (
+          <button
+            onClick={onSignOut}
+            title="Sign out"
+            aria-label="Sign out"
+            className="rounded-full p-2 text-text-secondary transition-colors hover:bg-surface-card hover:text-text-primary"
+          >
+            <LogOut className="h-4 w-4" />
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            title="Sign in to sync progress"
+            aria-label="Sign in"
+            className="rounded-full p-2 text-accent-blush transition-colors hover:bg-surface-card"
+          >
+            <LogIn className="h-4 w-4" />
+          </Link>
+        )}
       </div>
     </aside>
   );

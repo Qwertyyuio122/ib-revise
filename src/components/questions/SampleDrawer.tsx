@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, RotateCcw, Eye, EyeOff, Bookmark, Check } from 'lucide-react';
 import {
   DUMMY_FLASHCARDS,
   DUMMY_SAMPLE_QUESTIONS,
 } from '@/data/dummy-data';
 import { Subject } from '@/types/database';
+import { createClient } from '@/lib/supabase/client';
 import { PillButton } from '@/components/ui/PillButton';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { cn } from '@/lib/utils';
@@ -14,12 +15,14 @@ import { cn } from '@/lib/utils';
 interface SampleDrawerProps {
   subject: Subject | null;
   initialMode: 'questions' | 'flashcards';
+  userId?: string | null;
   onClose: () => void;
 }
 
 export function SampleDrawer({
   subject,
   initialMode,
+  userId,
   onClose,
 }: SampleDrawerProps) {
   const [mode, setMode] = useState<'questions' | 'flashcards'>(initialMode);
@@ -29,6 +32,30 @@ export function SampleDrawer({
     q_math_m23_p1_06: true,
   });
   const [ratedCardIds, setRatedCardIds] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    setMode(initialMode);
+  }, [initialMode, subject]);
+
+  useEffect(() => {
+    if (!userId) return;
+    const supabase = createClient();
+    supabase
+      .from('user_question_activity')
+      .select('question_id, status')
+      .eq('user_id', userId)
+      .then(({ data }) => {
+        if (data && data.length > 0) {
+          const map: Record<string, boolean> = {};
+          data.forEach((row) => {
+            if (row.status === 'BOOKMARKED') {
+              map[row.question_id] = true;
+            }
+          });
+          setBookmarkedIds(map);
+        }
+      });
+  }, [userId]);
 
   if (!subject) return null;
 
@@ -52,8 +79,27 @@ export function SampleDrawer({
     setRevealedSchemeIds((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const toggleBookmark = (id: string) => {
-    setBookmarkedIds((prev) => ({ ...prev, [id]: !prev[id] }));
+  const toggleBookmark = async (id: string) => {
+    const nextState = !bookmarkedIds[id];
+    setBookmarkedIds((prev) => ({ ...prev, [id]: nextState }));
+
+    if (userId) {
+      const supabase = createClient();
+      if (nextState) {
+        await supabase.from('user_question_activity').upsert({
+          user_id: userId,
+          question_id: id,
+          status: 'BOOKMARKED',
+          last_practiced_at: new Date().toISOString(),
+        });
+      } else {
+        await supabase
+          .from('user_question_activity')
+          .delete()
+          .eq('user_id', userId)
+          .eq('question_id', id);
+      }
+    }
   };
 
   return (
@@ -75,7 +121,9 @@ export function SampleDrawer({
               </span>
             </div>
             <p className="mt-1 text-[13px] text-text-secondary">
-              Phase 1 interactive sample data preview
+              {userId
+                ? 'Synced with your private Supabase session (RLS active)'
+                : 'Guest preview mode — sign in to persist bookmarks'}
             </p>
           </div>
 
