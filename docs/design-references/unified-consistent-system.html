@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Revision — Unified Consistent System Across All 6 Subjects</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ONE SINGLE UNIFIED DESIGN SYSTEM ACROSS EVERY PAGE */
+    :root {
+      --bg-canvas: #FFFFFF;
+      --bg-sidebar: #FAFAFA;
+      --bg-hover: #F4F4F5;
+      --bg-pill: #F4F4F5;
+      --border: #E4E4E7;
+      --border-soft: #F4F4F5;
+      --ink: #18181B;
+      --muted: #71717A;
+      --accent-dark: #18181B;
+      --font-display: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      /* Per-page top nature aurora wash (neutral on Home, tailored inside each subject) */
+      --wash-1: rgba(219, 234, 254, 0.55);
+      --wash-2: rgba(224, 242, 254, 0.48);
+      --wash-3: rgba(241, 245, 249, 0.45);
+      --subj-accent: #18181B;
+      --subj-soft: #F4F4F5;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: #F4F4F5;
+      color: var(--ink);
+      line-height: 1.5;
+      padding: 14px 18px 56px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Preview Switcher Strip */
+    .preview-bar {
+      max-width: 1320px;
+      margin: 0 auto 12px;
+      background: #18181B;
+      color: #FAFAFA;
+      border-radius: 12px;
+      padding: 10px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .bar-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .bar-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #A1A1AA; font-weight: 600; margin-right: 4px; }
+    .bar-btn {
+      border: 1px solid #3F3F46;
+      background: #27272A;
+      color: #E4E4E7;
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 11px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 140ms ease;
+    }
+    .bar-btn:hover { border-color: #71717A; }
+    .bar-btn.active { background: #FFFFFF; color: #18181B; border-color: #FFFFFF; font-weight: 600; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+    /* Shared App Frame */
+    .app-window {
+      max-width: 1320px;
+      margin: 0 auto;
+      background: var(--bg-canvas);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      min-height: 820px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Consistent Top Bar on EVERY Screen */
+    .topbar {
+      height: 54px;
+      border-bottom: 1px solid var(--border-soft);
+      background: var(--bg-canvas);
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+    .top-left { display: flex; align-items: center; gap: 14px; }
+    .brand {
+      width: 204px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 15.5px;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .search-pill {
+      width: 260px;
+      height: 32px;
+      background: var(--bg-pill);
+      border-radius: 999px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+    .kbd {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      padding: 1px 6px;
+      border-radius: 5px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .top-right { display: flex; align-items: center; gap: 10px; }
+    .icon-btn {
+      width: 30px; height: 30px; border-radius: 8px;
+      display: inline-flex; align-items: center; justify-content: center;
+      color: var(--muted); position: relative; cursor: pointer;
+    }
+    .icon-btn:hover { background: var(--bg-hover); color: var(--ink); }
+    .notif-dot {
+      position: absolute; top: 5px; right: 5px; width: 6px; height: 6px;
+      border-radius: 50%; background: #EF4444; border: 1.5px solid #fff;
+    }
+    .pill-stat {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 999px;
+      background: #FAFAFA; border: 1px solid var(--border);
+      font-size: 12px; font-weight: 600; color: var(--ink);
+    }
+    .avatar-sprout {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #ECFDF5; border: 1.5px solid #A7F3D0;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Shell Body + Strictly Neutral Sidebar */
+    .shell { flex: 1; display: flex; min-height: 760px; }
+
+    .sidebar {
+      width: 224px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-soft);
+      padding: 12px 10px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .seg-pills {
+      display: inline-flex; gap: 2px; padding: 3px;
+      background: #EFEFF1; border-radius: 999px; margin: 0 4px 12px;
+    }
+    .seg-pill {
+      padding: 3px 12px; border-radius: 999px;
+      font-size: 11.5px; font-weight: 600; color: var(--muted);
+    }
+    .seg-pill.active { background: #FFFFFF; color: var(--ink); }
+
+    .nav-list { display: flex; flex-direction: column; gap: 1px; }
+    .nav-section-label {
+      font-size: 10.5px; font-weight: 600; letter-spacing: 0.05em;
+      text-transform: uppercase; color: #A1A1AA;
+      padding: 12px 10px 4px;
+    }
+    .nav-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6.5px 10px; border-radius: 8px;
+      font-size: 13px; font-weight: 500; color: #3F3F46;
+      cursor: pointer; transition: background 120ms ease;
+    }
+    .nav-row:hover { background: #EFEFF1; }
+    /* Neutral active state across the whole global sidebar! */
+    .nav-row.active {
+      background: #E4E4E7;
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .nav-row-left { display: flex; align-items: center; gap: 9px; }
+    .nav-sub {
+      padding: 5.5px 10px 5.5px 34px; font-size: 12.5px; color: #52525B;
+      border-radius: 8px; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-sub:hover { background: #EFEFF1; color: var(--ink); }
+    .nav-sub.active { background: #E4E4E7; color: var(--ink); font-weight: 600; }
+    .mini-tag {
+      font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 6px;
+      background: #EFEFF1; color: #3F3F46;
+    }
+
+    /* Main Content Viewport */
+    .viewport {
+      flex: 1;
+      background: var(--bg-canvas);
+      overflow-y: auto;
+    }
+
+    .aurora-header {
+      padding: 20px 44px 24px;
+      background:
+        radial-gradient(ellipse 68% 120% at 15% 0%, var(--wash-1), transparent 72%),
+        radial-gradient(ellipse 58% 110% at 54% 0%, var(--wash-2), transparent 70%),
+        radial-gradient(ellipse 52% 95% at 88% 8%, var(--wash-3), transparent 72%),
+        linear-gradient(180deg, rgba(255,255,255,0) 60%, #FFFFFF 100%);
+      position: relative;
+    }
+
+    .col-center { max-width: 820px; margin: 0 auto; }
+    .main-pad { padding: 8px 44px 48px; }
+
+    /* Shared Typography Across ALL Screens */
+    .h-title {
+      font-family: var(--font-display);
+      font-size: 27px;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+    .h-sub {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--muted);
+    }
+
+    /* Homepage Elements */
+    .announce-bar {
+      max-width: 820px; margin: 0 auto 22px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 6px 14px; border-radius: 999px;
+      background: rgba(255,255,255,0.78); border: 1px solid var(--border);
+      font-size: 12.5px; color: #3F3F46;
+      width: fit-content;
+    }
+    .pill-btn {
+      padding: 4px 12px; border-radius: 999px;
+      border: 1px solid var(--border); background: #FFFFFF;
+      font-family: var(--font-body); font-size: 12px; font-weight: 600;
+      color: var(--ink); cursor: pointer;
+    }
+    .pill-btn:hover { background: var(--bg-hover); }
+    .pill-btn-dark {
+      padding: 7px 15px; border-radius: 999px;
+      border: none; background: #18181B; color: #FFFFFF;
+      font-family: var(--font-body); font-size: 12px; font-weight: 600;
+      cursor: pointer;
+    }
+    .pill-btn-dark:hover { opacity: 0.9; }
+
+    .hero-row {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 24px; flex-wrap: wrap;
+    }
+    .daily-card {
+      width: 440px; max-width: 100%; height: 92px;
+      border-radius: 14px; border: 1px solid var(--border);
+      background: linear-gradient(95deg, #FFFFFF 40%, #F0F9FF 78%, #ECFDF5 100%);
+      padding: 14px 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: relative; overflow: hidden;
+    }
+
+    .subj-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 12px;
+    }
+    .subj-card {
+      height: 118px; border-radius: 14px; padding: 15px 16px;
+      color: #FFFFFF; display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; overflow: hidden; cursor: pointer;
+      transition: transform 140ms ease;
+    }
+    .subj-card:hover { transform: translateY(-2px); }
+    .subj-card-title {
+      font-family: var(--font-display); font-size: 15.5px; font-weight: 600;
+      line-height: 1.25; max-width: 72%; position: relative; z-index: 2;
+    }
+    .subj-open {
+      align-self: flex-start; background: #FFFFFF; color: #18181B;
+      font-size: 11.5px; font-weight: 600; padding: 4px 11px;
+      border-radius: 999px; position: relative; z-index: 2;
+    }
+    .subj-art {
+      position: absolute; right: -4px; bottom: -6px;
+      width: 114px; height: 114px; pointer-events: none;
+    }
+
+    /* Subject Hub Consistent Components */
+    .tabs-bar {
+      display: flex; gap: 22px; border-bottom: 1px solid var(--border); margin-top: 16px;
+    }
+    .tab-link {
+      padding: 9px 2px 11px; font-size: 13px; font-weight: 500;
+      color: var(--muted); border-bottom: 2px solid transparent; cursor: pointer;
+    }
+    .tab-link.active { color: var(--ink); border-bottom-color: var(--subj-accent); font-weight: 600; }
+
+    .ia-card {
+      margin: 18px 0 22px; border: 1px solid var(--border); border-radius: 14px;
+      padding: 14px 18px; background: #FFFFFF;
+      display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+    }
+    .step-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: #52525B; }
+    .step-num {
+      width: 18px; height: 18px; border-radius: 50%; background: #F4F4F5; color: #3F3F46;
+      font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center;
+    }
+
+    /* Tailored Per-Subject Spotlight Strip (Gives each subject unique functional differences inside the same standard!) */
+    .subject-spotlight {
+      margin: 0 0 24px;
+      border: 1px solid var(--border);
+      border-left: 3.5px solid var(--subj-accent);
+      border-radius: 12px;
+      padding: 13px 16px;
+      background: var(--subj-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .spot-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+    .spot-pill {
+      padding: 4px 10px; border-radius: 999px; background: #FFFFFF;
+      border: 1px solid var(--border); font-size: 11.5px; font-weight: 500; color: var(--ink);
+    }
+
+    /* Borderless 2-Column Tool Grid Standard */
+    .section-heading {
+      font-family: var(--font-display); font-size: 14px; font-weight: 600;
+      color: #3F3F46; margin: 24px 0 10px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .section-sub { font-family: var(--font-body); font-size: 12px; font-weight: 400; color: var(--muted); }
+    .tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px 24px; }
+    .tool-row {
+      display: flex; align-items: center; gap: 13px; padding: 10px 12px;
+      border-radius: 14px; cursor: pointer; transition: background 140ms ease;
+    }
+    .tool-row:hover { background: var(--bg-hover); }
+    .pastel-icon {
+      width: 42px; height: 42px; border-radius: 11px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .tool-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+    .tool-desc { font-size: 12px; color: var(--muted); line-height: 1.35; }
+
+    /* Shared Hairline Card for Question Runner & Essay Studio */
+    .hairline-card {
+      border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; background: #FFFFFF;
+    }
+    .split-essay { display: grid; grid-template-columns: 1.45fr 1fr; gap: 18px; margin-top: 16px; }
+
+    @media (max-width: 900px) {
+      .subj-grid, .tools-grid, .split-essay { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .aurora-header, .main-pad { padding-left: 18px; padding-right: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-bar">
+    <div class="bar-group">
+      <span class="bar-label">Consistent Unified Shell:</span>
+      <button class="bar-btn active" onclick="renderView('home', this)">Homepage (Neutral)</button>
+      <button class="bar-btn" onclick="renderView('bio', this)"><span class="dot" style="background:#10B981"></span>Biology HL</button>
+      <button class="bar-btn" onclick="renderView('chem', this)"><span class="dot" style="background:#0D9488"></span>Chemistry SL</button>
+      <button class="bar-btn" onclick="renderView('hist', this)"><span class="dot" style="background:#B45309"></span>History HL</button>
+      <button class="bar-btn" onclick="renderView('eng', this)"><span class="dot" style="background:#2563EB"></span>English Lit HL</button>
+      <button class="bar-btn" onclick="renderView('fr', this)"><span class="dot" style="background:#0284C7"></span>French B SL</button>
+      <button class="bar-btn" onclick="renderView('math', this)"><span class="dot" style="background:#D97706"></span>Math AA SL</button>
+      <button class="bar-btn" onclick="renderView('question', this)">Question Runner</button>
+      <button class="bar-btn" onclick="renderView('essay', this)">AI Essay Studio</button>
+    </div>
+  </div>
+
+  <div class="app-window">
+    <!-- ONE IDENTICAL TOP BAR ACROSS ALL SCREENS -->
+    <header class="topbar">
+      <div class="top-left">
+        <div class="brand" onclick="renderView('home', document.querySelector('.preview-bar .bar-btn'))">
+          <svg width="26" height="26" viewBox="0 0 36 36" fill="none">
+            <rect width="36" height="36" rx="9" fill="#18181B"/>
+            <path d="M18 26V16" stroke="#A7F3D0" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M18 16.5C18 11.5 22.5 8.5 27 10C26 14.5 22.5 17.5 18 16.5Z" fill="#34D399"/>
+            <path d="M18 18.5C18 14 13.5 11.5 9.5 13C10.5 17 14 19.5 18 18.5Z" fill="#A7F3D0"/>
+            <circle cx="15.5" cy="24" r="1.4" fill="#fff"/><circle cx="20.5" cy="24" r="1.4" fill="#fff"/>
+          </svg>
+          <span>Simple Revision</span>
+        </div>
+        <div class="search-pill">
+          <span style="display:flex;align-items:center;gap:7px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            Search syllabus, questions, notes...
+          </span>
+          <span class="kbd">⌘K</span>
+        </div>
+      </div>
+      <div class="top-right">
+        <span class="pill-stat" style="color:#065F46;background:#F4F4F5;">● Gemini Key Ready</span>
+        <span class="icon-btn" title="Timer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3 2 6"/></svg>
+        </span>
+        <span class="icon-btn" title="Notifications">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <span class="notif-dot"></span>
+        </span>
+        <span class="pill-stat">🔥 7</span>
+        <div class="avatar-sprout">
+          <svg width="16" height="16" viewBox="0 0 32 32" fill="none">
+            <path d="M16 14C16 9 20.5 7 24 8.5C23 12.5 19.5 14.5 16 14Z" fill="#10B981"/>
+            <rect x="8" y="13" width="16" height="14" rx="7" fill="#065F46"/>
+            <circle cx="13" cy="20" r="1.4" fill="#fff"/><circle cx="19" cy="20" r="1.4" fill="#fff"/>
+          </svg>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell">
+      <!-- ONE IDENTICAL NEUTRAL SIDEBAR ACROSS ALL SCREENS -->
+      <aside class="sidebar">
+        <div>
+          <div class="seg-pills">
+            <span class="seg-pill active">DP</span>
+            <span class="seg-pill">My 6</span>
+          </div>
+          <div class="nav-list">
+            <div class="nav-row active" id="nav-home" onclick="renderView('home')">
+              <span class="nav-row-left">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                Home
+              </span>
+            </div>
+            <div class="nav-row" id="nav-subjects" onclick="renderView('bio')">
+              <span class="nav-row-left">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                My Subjects
+              </span>
+              <span style="color:#A1A1AA;font-size:12px;">›</span>
+            </div>
+            <div class="nav-row">
+              <span class="nav-row-left">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M12 8V4H8"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+                Sprout AI Tutor
+              </span>
+            </div>
+            <div class="nav-row">
+              <span class="nav-row-left">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+                Study Planner
+              </span>
+            </div>
+            <div class="nav-row">
+              <span class="nav-row-left">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/></svg>
+                My Notes
+              </span>
+            </div>
+
+            <div class="nav-section-label">All Resources</div>
+            <div class="nav-sub" id="nav-question" onclick="renderView('question')">Question Bank</div>
+            <div class="nav-sub">Study Notes</div>
+            <div class="nav-sub">Cheatsheets <span class="mini-tag">Free</span></div>
+            <div class="nav-sub">Flashcards</div>
+
+            <div class="nav-section-label">IA / EE / TOK</div>
+            <div class="nav-sub" id="nav-essay" onclick="renderView('essay')">AI Essay Studio</div>
+            <div class="nav-sub">Coursework Guides</div>
+            <div class="nav-sub">Exemplars</div>
+
+            <div class="nav-section-label">Tools</div>
+            <div class="nav-sub">Plagiarism &amp; AI</div>
+            <div class="nav-sub">Teach Sprout</div>
+            <div class="nav-sub">Blurting</div>
+            <div class="nav-row" style="margin-top:4px;">
+              <span class="nav-row-left">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+                Saved
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="nav-list" style="border-top:1px solid var(--border-soft);padding-top:8px;">
+          <div class="nav-row">
+            <span class="nav-row-left">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              Settings &amp; Gemini Key
+            </span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Dynamic Consistent Viewport -->
+      <main class="viewport" id="viewport"></main>
+    </div>
+  </div>
+
+  <script>
+    const SUBJECTS = {
+      bio: {
+        name: "Biology", level: "HL",
+        wash1: "rgba(167,243,208,0.55)", wash2: "rgba(186,230,253,0.45)", wash3: "rgba(240,253,244,0.6)",
+        accent: "#059669", soft: "#F0FDF4",
+        iaLabel: "Biology IA", iaTitle: "Scientific Investigation",
+        steps: ["Choose focus", "Set research question", "Draft & AI review"],
+        spotlightTitle: "Biology HL Lab & Syllabus Focus",
+        spotlightPills: ["2025 Syllabus (Themes A–D)", "20% IA Lab Weight", "44% Paper 2 Essays", "Cell & Pathway Diagrams"],
+        practice: [
+          { t: "Questionbank", d: "Practice Paper 1A/1B & Paper 2 questions · 2,438 items", bg: "#EFF6FF", c: "#2563EB" },
+          { t: "Visualizations", d: "Interactive cellular, membrane & metabolic pathway models", bg: "#ECFDF5", c: "#059669" },
+          { t: "Blurting", d: "Blank-page recall on processes (e.g. chemiosmosis)", bg: "#F5F3FF", c: "#7C3AED" },
+          { t: "Teach Sprout", d: "Explain biological mechanisms step-by-step to Sprout", bg: "#F0FDF4", c: "#16A34A" },
+          { t: "Exam Builder", d: "Custom timed SL/HL mock builder", bg: "#F4F4F5", c: "#3F3F46" },
+          { t: "Mistakes Log", d: "Redo missed markscheme terminology", bg: "#FEF2F2", c: "#DC2626" }
+        ],
+        learn: [
+          { t: "Study Guide", d: "Bite-sized notes across Unity, Form, Continuity & Interaction", bg: "#FEF9C3", c: "#CA8A04" },
+          { t: "Flashcards", d: "Active recall for organelles, enzymes & HL genetics", bg: "#E0F2FE", c: "#0284C7" },
+          { t: "Cheatsheets", d: "High-yield experimental variables & graph rules", bg: "#DCFCE7", c: "#16A34A" },
+          { t: "AI Essay & IA Studio", d: "Check IA raw data analysis, uncertainty & evaluation", bg: "#FFEDD5", c: "#EA580C" }
+        ]
+      },
+      chem: {
+        name: "Chemistry", level: "SL",
+        wash1: "rgba(153,246,228,0.55)", wash2: "rgba(186,230,253,0.48)", wash3: "rgba(236,254,255,0.6)",
+        accent: "#0D9488", soft: "#F0FDFA",
+        iaLabel: "Chemistry IA", iaTitle: "Scientific Investigation (SL)",
+        steps: ["Select reaction variable", "Design titration / trial", "Error & AI review"],
+        spotlightTitle: "Chemistry SL Tools & Formula Reference",
+        spotlightPills: ["2025 SL Structure & Reactivity", "Interactive Data Booklet", "Periodic Table", "Stoichiometry & Energetics"],
+        practice: [
+          { t: "Questionbank", d: "SL Paper 1 & Paper 2 stoichiometry, kinetics & organic drills", bg: "#F0FDFA", c: "#0D9488" },
+          { t: "Calculation Step Checker", d: "Check significant figures, units & mole ratios", bg: "#EFF6FF", c: "#2563EB" },
+          { t: "Blurting", d: "Active recall for periodic trends & reaction conditions", bg: "#FEF3C7", c: "#D97706" },
+          { t: "Teach Sprout", d: "Walk Sprout through equilibrium & enthalpy cycles", bg: "#ECFDF5", c: "#059669" },
+          { t: "Exam Builder", d: "Timed SL Paper 1A/1B and Paper 2 mocks", bg: "#F4F4F5", c: "#3F3F46" },
+          { t: "Mistakes Log", d: "Track calculation slips & missed state symbols", bg: "#FEF2F2", c: "#DC2626" }
+        ],
+        learn: [
+          { t: "IB Data Booklet", d: "Built-in constants, enthalpies, IR & NMR tables", bg: "#E0F2FE", c: "#0284C7" },
+          { t: "Study Guide", d: "SL Structure 1–3 & Reactivity 1–3 concise chapters", bg: "#FEF9C3", c: "#CA8A04" },
+          { t: "Flashcards", d: "Functional groups, indicator colors & bond enthalpies", bg: "#FFEDD5", c: "#EA580C" },
+          { t: "AI IA Studio", d: "Audit uncertainty propagation & lab conclusion", bg: "#DCFCE7", c: "#16A34A" }
+        ]
+      },
+      hist: {
+        name: "History", level: "HL",
+        wash1: "rgba(253,230,138,0.52)", wash2: "rgba(254,215,170,0.48)", wash3: "rgba(241,245,249,0.5)",
+        accent: "#B45309", soft: "#FFFBEB",
+        iaLabel: "History IA", iaTitle: "Historical Investigation",
+        steps: ["Section A: Evaluate 2 sources", "Section B: Investigation", "Section C: Reflection"],
+        spotlightTitle: "History HL Essay & Source Architecture",
+        spotlightPills: ["Paper 1 OPCVL Source Drills", "Paper 2 & 3 Comparative Essays", "Historiography Schools", "Timeline Builder"],
+        practice: [
+          { t: "Questionbank", d: "Paper 1 OPCVL source sets & Paper 2/3 essay prompts", bg: "#FFFBEB", c: "#B45309" },
+          { t: "OPCVL Source Trainer", d: "Drills on Origin, Purpose, Content, Value & Limitation", bg: "#FFEDD5", c: "#EA580C" },
+          { t: "Essay Outline Builder", d: "Structure thesis + counter-arguments + historian quotes", bg: "#EFF6FF", c: "#2563EB" },
+          { t: "Teach Sprout", d: "Defend causal arguments & historical perspectives aloud", bg: "#ECFDF5", c: "#059669" },
+          { t: "Exam Builder", d: "Timed 45-minute essay & 1-hour Paper 1 practice", bg: "#F4F4F5", c: "#3F3F46" },
+          { t: "Mistakes Log", d: "Fix narrative drift & weak historiographical links", bg: "#FEF2F2", c: "#DC2626" }
+        ],
+        learn: [
+          { t: "Historiography Timelines", d: "Orthodox, Revisionist & Post-Revisionist schools", bg: "#FEF9C3", c: "#CA8A04" },
+          { t: "Study Notes", d: "Authoritarian states, Cold War & HL regional topics", bg: "#F4F4F5", c: "#3F3F46" },
+          { t: "Flashcards", d: "Key dates, treaties, statistics & historian names", bg: "#FFEDD5", c: "#EA580C" },
+          { t: "AI Essay & IA Editor", d: "Inline highlights, historiography comments & edits", bg: "#ECFDF5", c: "#059669" }
+        ]
+      },
+      eng: {
+        name: "English Literature", level: "HL",
+        wash1: "rgba(191,219,254,0.58)", wash2: "rgba(224,231,255,0.45)", wash3: "rgba(248,250,252,0.6)",
+        accent: "#1D4ED8", soft: "#EFF6FF",
+        iaLabel: "English Lit HL", iaTitle: "Individual Oral & HL Essay",
+        steps: ["Choose literary works", "Define Global Issue", "Line of inquiry & edit"],
+        spotlightTitle: "English Literature HL Works & Craft",
+        spotlightPills: ["Paper 1 Unseen Prose/Poetry", "Paper 2 Comparative Essay", "1,200–1,500w HL Essay", "Literary Device Matrix"],
+        practice: [
+          { t: "Questionbank", d: "Paper 1 unseen passages & Paper 2 comparative prompts", bg: "#EFF6FF", c: "#1D4ED8" },
+          { t: "Literary Device Drill", d: "Spot syntax, caesura, motif, tone & narrative shift", bg: "#E0F2FE", c: "#0284C7" },
+          { t: "Blurting", d: "Recall key quotes, motifs & structural turns per text", bg: "#FEF3C7", c: "#D97706" },
+          { t: "Teach Sprout", d: "Test your Global Issue & thesis against Socratic prompts", bg: "#ECFDF5", c: "#059669" },
+          { t: "Exam Builder", d: "Timed Paper 1 guided commentary & Paper 2 mocks", bg: "#F4F4F5", c: "#3F3F46" },
+          { t: "Mistakes Log", d: "Refine feature-spotting into effect-driven analysis", bg: "#FEF2F2", c: "#DC2626" }
+        ],
+        learn: [
+          { t: "Text & Author Guides", d: "Themes, context & formal craft across set works", bg: "#EFF6FF", c: "#2563EB" },
+          { t: "Quote Flashcards", d: "Spaced repetition tagged by theme & Global Issue", bg: "#FEF9C3", c: "#CA8A04" },
+          { t: "Global Issue Bank", d: "Curated IB fields of inquiry & cross-text pairings", bg: "#DCFCE7", c: "#16A34A" },
+          { t: "AI Essay & HL Editor", d: "Rubric A–D scoring, passage highlights & prose edits", bg: "#FFEDD5", c: "#EA580C" }
+        ]
+      },
+      fr: {
+        name: "French B", level: "SL",
+        wash1: "rgba(186,230,253,0.62)", wash2: "rgba(209,250,229,0.42)", wash3: "rgba(240,249,255,0.6)",
+        accent: "#0284C7", soft: "#F0F9FF",
+        iaLabel: "French B SL", iaTitle: "Individual Oral Stimulus",
+        steps: ["Pick 1 of 5 IB themes", "Build visual stimulus notes", "Practice Q&A with Sprout"],
+        spotlightTitle: "French B SL Themes & Text-Type Studio",
+        spotlightPills: ["5 IB Themes (Identités, Expériences...)", "Paper 1 Text Types", "Paper 2 Reading", "Subjonctif & Conditionnel"],
+        practice: [
+          { t: "Questionbank", d: "Paper 1 writing prompts & Paper 2 reading comprehension", bg: "#F0F9FF", c: "#0284C7" },
+          { t: "Text-Type & Register Drills", d: "Brochure, article, lettre formelle, blog & discours", bg: "#EFF6FF", c: "#2563EB" },
+          { t: "Blurting in French", d: "Timed recall of idioms, connecteurs & theme vocab", bg: "#ECFDF5", c: "#059669" },
+          { t: "Teach Sprout (en français)", d: "Practice written French dialogue & spontaneous follow-ups", bg: "#FEF3C7", c: "#D97706" },
+          { t: "Exam Builder", d: "Custom timed Paper 1 writing & reading sets", bg: "#F4F4F5", c: "#3F3F46" },
+          { t: "Mistakes Log", d: "Review faux amis, gender agreement & verb tenses", bg: "#FEF2F2", c: "#DC2626" }
+        ],
+        learn: [
+          { t: "Grammar & Conjugation Lab", d: "Subjonctif, conditionnel, passé composé vs imparfait", bg: "#E0F2FE", c: "#0284C7" },
+          { t: "Thematic Vocab Decks", d: "Identités, Expériences, Ingéniosité, Organisation, Partage", bg: "#FEF9C3", c: "#CA8A04" },
+          { t: "Connector Cheatsheets", d: "High-level transitions & idiomatic expressions", bg: "#DCFCE7", c: "#16A34A" },
+          { t: "AI French Writing Studio", d: "Inline French grammar fixes, register comments & rubric", bg: "#FFEDD5", c: "#EA580C" }
+        ]
+      },
+      math: {
+        name: "Math AA", level: "SL",
+        wash1: "rgba(254,240,138,0.52)", wash2: "rgba(253,230,138,0.45)", wash3: "rgba(224,242,254,0.48)",
+        accent: "#D97706", soft: "#FFFBEB",
+        iaLabel: "Math AA IA", iaTitle: "Mathematical Exploration",
+        steps: ["Choose personal topic", "Build mathematical model", "Verify notation & AI review"],
+        spotlightTitle: "Math AA SL Paper Split & Formula Tools",
+        spotlightPills: ["Paper 1: Non-Calculator", "Paper 2: GDC Permitted", "Interactive Formula Booklet", "SL Topics 1–5"],
+        practice: [
+          { t: "Questionbank", d: "Paper 1 non-calc & Paper 2 GDC drills across Topics 1–5", bg: "#FFFBEB", c: "#D97706" },
+          { t: "Worked Step Walkthroughs", d: "Line-by-line algebraic & calculus text solutions", bg: "#EFF6FF", c: "#2563EB" },
+          { t: "Blurting Formulas", d: "Active recall of identities & derivatives not in booklet", bg: "#FFEDD5", c: "#EA580C" },
+          { t: "Teach Sprout", d: "Explain why a proof or integration substitution works", bg: "#ECFDF5", c: "#059669" },
+          { t: "Exam Builder", d: "Build timed 90-minute Paper 1 or Paper 2 mocks", bg: "#F4F4F5", c: "#3F3F46" },
+          { t: "Mistakes Log", d: "Track domain restrictions, sign errors & GDC rounding", bg: "#FEF2F2", c: "#DC2626" }
+        ],
+        learn: [
+          { t: "Formula Booklet Reference", d: "Every SL formula mapped to example problems", bg: "#FEF3C7", c: "#B45309" },
+          { t: "Study Guide", d: "Number & Algebra, Functions, Trig, Stats & Calculus", bg: "#E0F2FE", c: "#0284C7" },
+          { t: "Flashcards", d: "Trig values, derivative rules & log laws", bg: "#DCFCE7", c: "#16A34A" },
+          { t: "AI Exploration Studio", d: "Check IA Criterion A–E clarity, math notation & reflection", bg: "#F4F4F5", c: "#3F3F46" }
+        ]
+      }
+    };
+
+    function setActiveNav(id) {
+      document.querySelectorAll('.nav-row, .nav-sub').forEach(el => el.classList.remove('active'));
+      const el = document.getElementById(id);
+      if (el) el.classList.add('active');
+    }
+
+    function setRootTokens(w1, w2, w3, accent, soft) {
+      const r = document.documentElement.style;
+      r.setProperty('--wash-1', w1);
+      r.setProperty('--wash-2', w2);
+      r.setProperty('--wash-3', w3);
+      r.setProperty('--subj-accent', accent);
+      r.setProperty('--subj-soft', soft);
+    }
+
+    function renderView(key, btn) {
+      if (btn) {
+        document.querySelectorAll('.preview-bar .bar-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+      const vp = document.getElementById('viewport');
+
+      if (key === 'home') {
+        setActiveNav('nav-home');
+        setRootTokens("rgba(219,234,254,0.55)", "rgba(224,242,254,0.48)", "rgba(241,245,249,0.45)", "#18181B", "#F4F4F5");
+        vp.innerHTML = `
+          <div class="aurora-header">
+            <div class="announce-bar">
+              <span>Working on your IA, EE, or TOK? Try the AI Essay Studio</span>
+              <button class="pill-btn" onclick="renderView('essay')">Open</button>
+            </div>
+            <div class="col-center">
+              <div class="hero-row">
+                <div>
+                  <div class="h-title">Good evening,</div>
+                  <div class="h-sub">Harris</div>
+                </div>
+                <div class="daily-card">
+                  <div>
+                    <div style="font-family:var(--font-mono);font-size:12.5px;font-weight:700;letter-spacing:0.04em;">SPROUT DAILY <span style="color:#D97706;">#2</span></div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:1px;">5 cross-subject questions ready</div>
+                    <button class="pill-btn-dark" style="margin-top:8px;padding:5px 12px;font-size:11.5px;" onclick="renderView('question')">Practice →</button>
+                  </div>
+                  <svg width="96" height="78" viewBox="0 0 96 78" fill="none">
+                    <path d="M52 24 C52 14 61 10 69 13 C67 21 59 25 52 24 Z" fill="#10B981"/>
+                    <path d="M52 26 C52 18 43 14 37 18 C39 24 46 27 52 26 Z" fill="#6EE7B7"/>
+                    <rect x="38" y="25" width="28" height="27" rx="13" fill="#065F46"/>
+                    <circle cx="47" cy="37" r="2.2" fill="#fff"/><circle cx="57" cy="37" r="2.2" fill="#fff"/>
+                    <circle cx="44" cy="41" r="1.8" fill="#F59E0B"/><circle cx="60" cy="41" r="1.8" fill="#F59E0B"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="main-pad">
+            <div class="col-center">
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);">
+                <span style="font-weight:600;color:var(--ink);">My subjects</span>
+                <span>6 IB Diploma subjects · Click any card to view its tailored page</span>
+              </div>
+              <div class="subj-grid">
+                <div class="subj-card" style="background:linear-gradient(135deg,#1D6E45,#49AD78);" onclick="renderView('bio')">
+                  <div class="subj-card-title">Biology HL</div>
+                  <span class="subj-open">Open &gt;</span>
+                  <svg class="subj-art" viewBox="0 0 120 120" fill="none"><path d="M28 100 C46 58 76 42 110 38 C98 76 68 98 28 100 Z" fill="#BBF7D0" opacity="0.45"/><path d="M62 56 C49 32 25 36 28 56 C31 72 50 70 62 56 Z" fill="#ECFDF5" opacity="0.82"/><path d="M64 56 C80 32 102 38 97 58 C92 74 74 70 64 56 Z" fill="#D1FAE5" opacity="0.9"/></svg>
+                </div>
+                <div class="subj-card" style="background:linear-gradient(135deg,#0F766E,#2DD4BF);" onclick="renderView('chem')">
+                  <div class="subj-card-title">Chemistry SL</div>
+                  <span class="subj-open">Open &gt;</span>
+                  <svg class="subj-art" viewBox="0 0 120 120" fill="none"><polygon points="78,24 104,39 104,69 78,84 52,69 52,39" fill="#CCFBF1" opacity="0.38"/><circle cx="88" cy="48" r="14" fill="#FFFFFF" opacity="0.48"/></svg>
+                </div>
+                <div class="subj-card" style="background:linear-gradient(135deg,#5A3626,#8D5E47);" onclick="renderView('hist')">
+                  <div class="subj-card-title">History HL</div>
+                  <span class="subj-open">Open &gt;</span>
+                  <svg class="subj-art" viewBox="0 0 120 120" fill="none"><rect x="48" y="34" width="46" height="58" rx="9" fill="#FDE68A" opacity="0.32" transform="rotate(9 48 34)"/><circle cx="78" cy="70" r="17" fill="#FEF3C7" opacity="0.48"/></svg>
+                </div>
+                <div class="subj-card" style="background:linear-gradient(135deg,#1E40AF,#3B82F6);" onclick="renderView('eng')">
+                  <div class="subj-card-title">English Literature HL</div>
+                  <span class="subj-open">Open &gt;</span>
+                  <svg class="subj-art" viewBox="0 0 120 120" fill="none"><path d="M40 48 C62 38 88 40 104 52 L96 96 C78 88 54 88 38 94 Z" fill="#DBEAFE" opacity="0.45"/><path d="M70 43 L66 89" stroke="#FFFFFF" stroke-width="2.5" opacity="0.65"/></svg>
+                </div>
+                <div class="subj-card" style="background:linear-gradient(135deg,#0369A1,#38BDF8);" onclick="renderView('fr')">
+                  <div class="subj-card-title">French B SL</div>
+                  <span class="subj-open">Open &gt;</span>
+                  <svg class="subj-art" viewBox="0 0 120 120" fill="none"><path d="M78 20 L85 60 L100 100 L84 100 L78 80 L72 100 L56 100 L71 60 Z" fill="#E0F2FE" opacity="0.52"/></svg>
+                </div>
+                <div class="subj-card" style="background:linear-gradient(135deg,#B45309,#F59E0B);" onclick="renderView('math')">
+                  <div class="subj-card-title">Math AA SL</div>
+                  <span class="subj-open">Open &gt;</span>
+                  <svg class="subj-art" viewBox="0 0 120 120" fill="none"><path d="M26 94 Q 58 26 106 68" stroke="#FEF3C7" stroke-width="6" stroke-linecap="round" opacity="0.72"/><circle cx="64" cy="54" r="21" stroke="#FFFFFF" stroke-width="3" opacity="0.38"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      if (SUBJECTS[key]) {
+        const s = SUBJECTS[key];
+        setActiveNav('nav-subjects');
+        setRootTokens(s.wash1, s.wash2, s.wash3, s.accent, s.soft);
+        vp.innerHTML = `
+          <div class="aurora-header" style="padding-bottom:0;">
+            <div class="col-center">
+              <div style="display:flex;align-items:baseline;gap:10px;padding-top:10px;">
+                <span class="h-title">${s.name}</span>
+                <span class="h-sub">${s.level}</span>
+              </div>
+              <div class="tabs-bar">
+                <div class="tab-link active">Resources</div>
+                <div class="tab-link">Topics &amp; Progress</div>
+                <div class="tab-link">Study Plan</div>
+                <div class="tab-link">Saved</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="main-pad">
+            <div class="col-center">
+              <div class="ia-card">
+                <div>
+                  <div style="font-size:11.5px;color:var(--muted);">${s.iaLabel}</div>
+                  <div style="font-size:14.5px;font-weight:600;">${s.iaTitle}</div>
+                </div>
+                <div style="display:flex;gap:14px;flex-wrap:wrap;">
+                  ${s.steps.map((st, i) => `<span class="step-chip"><span class="step-num">${i + 1}</span>${st}</span>`).join('')}
+                </div>
+                <button class="pill-btn" onclick="renderView('essay')">Setup &gt;</button>
+              </div>
+
+              <div class="subject-spotlight">
+                <div style="font-size:12.5px;font-weight:600;color:var(--ink);">${s.spotlightTitle}</div>
+                <div class="spot-pills">
+                  ${s.spotlightPills.map(p => `<span class="spot-pill">${p}</span>`).join('')}
+                </div>
+              </div>
+
+              <div class="section-heading"><span>Practice</span><span class="section-sub">Active recall &amp; testing</span></div>
+              <div class="tools-grid">
+                ${s.practice.map(item => `
+                  <div class="tool-row" onclick="renderView('question')">
+                    <div class="pastel-icon" style="background:${item.bg};color:${item.c};">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 10h8"/><path d="M8 14h5"/></svg>
+                    </div>
+                    <div>
+                      <div class="tool-title">${item.t}</div>
+                      <div class="tool-desc">${item.d}</div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+
+              <div class="section-heading"><span>Learn &amp; Coursework</span><span class="section-sub">Tailored to ${s.name} ${s.level}</span></div>
+              <div class="tools-grid">
+                ${s.learn.map(item => `
+                  <div class="tool-row" onclick="renderView('essay')">
+                    <div class="pastel-icon" style="background:${item.bg};color:${item.c};">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                    </div>
+                    <div>
+                      <div class="tool-title">${item.t}</div>
+                      <div class="tool-desc">${item.d}</div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      if (key === 'question') {
+        setActiveNav('nav-question');
+        setRootTokens("rgba(241,245,249,0.5)", "rgba(248,250,252,0.5)", "rgba(255,255,255,0)", "#18181B", "#F4F4F5");
+        vp.innerHTML = `
+          <div class="main-pad" style="padding-top:26px;">
+            <div class="col-center">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                <div style="font-size:13px;color:var(--muted);">Chemistry SL &nbsp;&gt;&nbsp; Reactivity 1 · Energetics</div>
+                <span class="pill-stat" style="font-family:var(--font-mono);">14:22</span>
+              </div>
+              <div class="hairline-card">
+                <div style="display:flex;gap:8px;margin-bottom:14px;">
+                  <span class="mini-tag">SL Core</span>
+                  <span class="mini-tag">Paper 2</span>
+                  <span class="mini-tag">4 Marks</span>
+                </div>
+                <h2 style="font-family:var(--font-display);font-size:19px;font-weight:600;line-height:1.4;margin-bottom:16px;">
+                  Explain why the enthalpy change of combustion of ethanol calculated using average bond enthalpies differs from the experimental value in the IB Data Booklet.
+                </h2>
+                <textarea rows="4" style="width:100%;border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-family:var(--font-body);font-size:13.5px;background:#FAFAFA;">Average bond enthalpies apply to gaseous molecules only and represent averages across different compounds, whereas standard enthalpy of combustion involves liquid ethanol and liquid water at 298 K.</textarea>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:10px;">
+                  <div style="display:flex;gap:8px;">
+                    <button class="pill-btn">Reveal Markscheme</button>
+                    <button class="pill-btn">Mistakes Log</button>
+                    <button class="pill-btn">Ask Sprout Tutor</button>
+                  </div>
+                  <button class="pill-btn-dark">Grade My Answer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      if (key === 'essay') {
+        setActiveNav('nav-essay');
+        setRootTokens("rgba(241,245,249,0.5)", "rgba(248,250,252,0.5)", "rgba(255,255,255,0)", "#18181B", "#F4F4F5");
+        vp.innerHTML = `
+          <div class="main-pad" style="padding-top:26px;">
+            <div class="col-center" style="max-width:920px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                <div style="display:flex;gap:12px;align-items:center;">
+                  <span class="step-chip"><span class="step-num">1</span>History HL</span>
+                  <span class="step-chip"><span class="step-num">2</span>Internal Assessment</span>
+                  <span class="step-chip" style="font-weight:600;color:var(--ink);"><span class="step-num" style="background:#18181B;color:#fff;">3</span>Draft Editor</span>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <span class="pill-stat">Originality Signal: Low (11%)</span>
+                  <span class="pill-stat" style="background:#FEF3C7;color:#92400E;border-color:transparent;">Est. Score: 21 / 25</span>
+                </div>
+              </div>
+              <div class="split-essay">
+                <div class="hairline-card">
+                  <h2 style="font-family:var(--font-display);font-size:20px;font-weight:600;line-height:1.35;margin-bottom:14px;">
+                    To what extent did the Ruhr Crisis of 1923 destabilize the Weimar Republic?
+                  </h2>
+                  <p style="font-size:14px;line-height:1.75;color:#27272A;margin-bottom:12px;">
+                    The occupation of the industrial heartland in January 1923 exposed the vulnerability of the Weimar Republic.
+                    <span style="background:#FEF3C7;border-bottom:2px solid #D97706;padding:1px 3px;">Passive resistance spearheaded by Chancellor Cuno triggered hyperinflationary pressures across regional industries.</span>
+                  </p>
+                  <p style="font-size:14px;line-height:1.75;color:#27272A;">
+                    <span style="text-decoration:line-through;color:#9CA3AF;">...which destroyed the whole German middle class...</span>
+                    <span style="background:#ECFDF5;border-bottom:2px solid #059669;padding:1px 4px;color:#065F46;">...severely eroded the savings and confidence of the German Mittelstand.</span>
+                  </p>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                  <div class="hairline-card" style="padding:14px 16px;border-left:3.5px solid #D97706;">
+                    <div style="font-size:11.5px;font-weight:700;color:#92400E;">Criterion B · Inline Comment</div>
+                    <p style="font-size:12.5px;color:var(--muted);margin-top:4px;">Cite the November 1923 Reichsbank exchange rate (4.2 trillion marks/USD) to anchor hyperinflation magnitude.</p>
+                  </div>
+                  <div class="hairline-card" style="padding:14px 16px;border-left:3.5px solid #059669;">
+                    <div style="font-size:11.5px;font-weight:700;color:#065F46;">Suggested Direct Edit</div>
+                    <p style="font-size:12.5px;color:var(--muted);margin-top:4px;">Replaces vague wording with historiographical precision.</p>
+                    <div style="display:flex;gap:8px;margin-top:10px;">
+                      <button class="pill-btn-dark" style="padding:5px 12px;font-size:11.5px;">Accept Edit</button>
+                      <button class="pill-btn">Dismiss</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    renderView('home');
+  </script>
+</body>
+</html>

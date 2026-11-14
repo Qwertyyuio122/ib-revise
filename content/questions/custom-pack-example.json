@@ -1,0 +1,49 @@
+[
+  {
+    "id": "chem-custom-q099",
+    "subjectSlug": "chem",
+    "topicId": "chem-S1.4",
+    "paper": "Paper 2",
+    "questionType": "short_answer",
+    "calculatorPolicy": "allowed",
+    "difficulty": "standard",
+    "marks": 3,
+    "commandTerm": "Calculate",
+    "stemMarkdown": "Calculate the volume of $\\text{CO}_2(\\text{g})$, in $\\text{dm}^3$ at STP ($273.15\\text{ K}, 100\\text{ kPa}$), produced when $2.50\\text{ g}$ of calcium carbonate ($\\text{CaCO}_3$, $M = 100.09\\text{ g mol}^{-1}$) reacts completely with excess hydrochloric acid.",
+    "stimulusMarkdown": "Molar volume of an ideal gas at STP ($273.15\\text{ K}, 100\\text{ kPa}$) $= 22.7\\text{ dm}^3\\text{ mol}^{-1}$.",
+    "markschemePoints": [
+      {
+        "pointId": "M1",
+        "requirement": "Amount of $\\text{CaCO}_3$: $n = \\frac{2.50}{100.09} = 0.02498\\text{ mol}$ ($0.0250\\text{ mol}$ to 3 s.f.)",
+        "marks": 1
+      },
+      {
+        "pointId": "M2",
+        "requirement": "1:1 stoichiometric mole ratio between $\\text{CaCO}_3$ and $\\text{CO}_2$, so $n(\\text{CO}_2) = 0.02498\\text{ mol}$",
+        "marks": 1
+      },
+      {
+        "pointId": "A1",
+        "requirement": "Volume $V = 0.02498 \\times 22.7 = 0.567\\text{ dm}^3$ (to 3 significant figures with correct units)",
+        "marks": 1
+      }
+    ],
+    "walkthroughSteps": [
+      {
+        "stepNumber": 1,
+        "title": "Convert mass of CaCO3 to moles",
+        "explanationMarkdown": "Divide the given mass by the molar mass: $n = \\frac{m}{M} = \\frac{2.50}{100.09} = 0.02498\\text{ mol}$."
+      },
+      {
+        "stepNumber": 2,
+        "title": "Apply molar volume at IB STP (22.7 dm3 mol-1)",
+        "explanationMarkdown": "Multiply moles of $\\text{CO}_2$ by the 2025 IB Data Booklet molar gas volume ($22.7\\text{ dm}^3\\text{ mol}^{-1}$, not $22.4$): $V = 0.02498 \\times 22.7 = 0.567\\text{ dm}^3$."
+      }
+    ],
+    "commonPitfalls": [
+      "Using the legacy 22.4 dm3 mol-1 constant instead of the IB Data Booklet value 22.7 dm3 mol-1 at 100 kPa.",
+      "Forgetting to round the final answer to 3 significant figures to match 2.50 g."
+    ],
+    "isDailyEligible": true
+  }
+]

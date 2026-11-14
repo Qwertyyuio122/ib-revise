@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Simple Revision - IB Diploma Study Workspace</title>
+<!-- Tailwind CSS CDN with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans & Newsreader -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Newsreader"', 'serif'],
+          },
+          colors: {
+            brand: {
+              50: '#F2FBF5',
+              100: '#E1F7E8',
+              500: '#16A34A',
+              600: '#15803D',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-typography">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+<style data-purpose="custom-scenery">
+    /* Subtle misty morning horizon wash that fades softly into pristine white */
+    .nature-sky-wash {
+      background: linear-gradient(
+        180deg,
+        rgba(235, 245, 240, 0.7) 0%,
+        rgba(240, 244, 252, 0.55) 35%,
+        rgba(254, 250, 244, 0.3) 70%,
+        rgba(255, 255, 255, 1) 100%
+      );
+    }
+    
+    /* Pixelated aesthetic styling for Sprout Daily banner */
+    .pixel-box {
+      image-rendering: pixelated;
+    }
+  </style>
+</head>
+<body class="bg-white text-slate-800 antialiased min-h-screen flex selection:bg-emerald-100 selection:text-emerald-900">
+<!-- BEGIN: LeftSidebar -->
+<aside class="w-64 bg-[#FAFAFA] border-r border-[#F0F0F0] flex flex-col justify-between shrink-0 fixed h-screen top-0 left-0 z-30 select-none" data-purpose="sidebar-navigation">
+<!-- Top Nav Portion -->
+<div class="p-4 overflow-y-auto">
+<!-- Mascot & Brand Logo -->
+<div class="flex items-center justify-between pb-5 pt-1 px-1 border-b border-neutral-100">
+<a class="flex items-center gap-2.5 group" href="#">
+<!-- Cute Green Sprout Mascot Icon -->
+<div class="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 transition-transform group-hover:scale-105 shadow-sm">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24">
+<path d="M12 22V14M12 14C12 9.5 8.5 6 3 6C3 11.5 6.5 14 12 14ZM12 14C12 9 15.5 5.5 21 5.5C21 11 17.5 14 12 14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-bold text-slate-900 tracking-tight text-[15px] leading-tight">Simple Revision</span>
+</div>
+</div>
+</a>
+<span class="px-2 py-0.5 text-[11px] font-semibold tracking-wider text-emerald-700 bg-emerald-100/70 rounded-full border border-emerald-200/50">DP</span>
+</div>
+<!-- Navigation Links List -->
+<nav class="mt-4 space-y-0.5 text-[13px]">
+<!-- Home Link (Active) -->
+<a class="flex items-center gap-3 px-3 py-2 font-semibold text-slate-900 bg-slate-200/60 rounded-xl transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-800" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Home</span>
+</a>
+<!-- My Subjects Link -->
+<a class="flex items-center justify-between px-3 py-2 font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 rounded-xl transition-colors" href="#subjects-section">
+<div class="flex items-center gap-3">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>My Subjects</span>
+</div>
+<svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+<!-- Sprout AI Tutor -->
+<a class="flex items-center gap-3 px-3 py-2 font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 rounded-xl transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.523a4.5 4.5 0 01-1.35.207H7.12a4.5 4.5 0 01-1.35-.207L4.2 15.3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Sprout AI Tutor</span>
+</a>
+<!-- Study Planner -->
+<a class="flex items-center gap-3 px-3 py-2 font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 rounded-xl transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Study Planner</span>
+</a>
+<!-- My Notes -->
+<a class="flex items-center gap-3 px-3 py-2 font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 rounded-xl transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>My Notes</span>
+</a>
+<!-- Section: All Resources -->
+<div class="pt-3 pb-1">
+<div class="flex items-center justify-between px-3 py-1 text-slate-400 font-semibold text-[11px] uppercase tracking-wider">
+<span>All Resources</span>
+<svg class="w-3 h-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div class="pl-4 space-y-1 mt-1 border-l border-slate-200/80 ml-4">
+<a class="block px-2.5 py-1 text-[13px] text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100/70" href="#">Question Bank</a>
+<a class="block px-2.5 py-1 text-[13px] text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100/70" href="#">Study Notes</a>
+<a class="flex items-center justify-between px-2.5 py-1 text-[13px] text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100/70" href="#">
+<span>Cheatsheets</span>
+<span class="text-[9px] font-bold px-1.5 py-0.2 bg-emerald-100 text-emerald-700 rounded-md">New</span>
+</a>
+<a class="flex items-center justify-between px-2.5 py-1 text-[13px] text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100/70" href="#">
+<span>Textbooks</span>
+<span class="text-[9px] font-bold px-1.5 py-0.2 bg-emerald-100 text-emerald-700 rounded-md">New</span>
+</a>
+</div>
+</div>
+<!-- Section: IA/EE/TOK -->
+<div class="pt-2 pb-1">
+<div class="flex items-center justify-between px-3 py-1 text-slate-400 font-semibold text-[11px] uppercase tracking-wider">
+<span>IA / EE / TOK</span>
+<svg class="w-3 h-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div class="pl-4 space-y-1 mt-1 border-l border-slate-200/80 ml-4">
+<a class="block px-2.5 py-1 text-[13px] text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100/70" href="#">Coursework Studio</a>
+<a class="block px-2.5 py-1 text-[13px] text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100/70" href="#">Grade IA/EE/TOK</a>
+<a class="block px-2.5 py-1 text-[13px] text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100/70" href="#">Examples</a>
+</div>
+</div>
+<!-- Section: Tools -->
+<div class="pt-2 pb-1">
+<div class="flex items-center justify-between px-3 py-1 text-slate-400 font-semibold text-[11px] uppercase tracking-wider">
+<span>Tools</span>
+<svg class="w-3 h-3" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div class="pl-4 space-y-1 mt-1 border-l border-slate-200/80 ml-4">
+<a class="block px-2.5 py-1 text-[13px] text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100/70" href="#">Plagiarism &amp; AI</a>
+<a class="block px-2.5 py-1 text-[13px] text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100/70" href="#">Teach Sprout</a>
+<a class="flex items-center justify-between px-2.5 py-1 text-[13px] text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100/70" href="#">
+<span>Blurting</span>
+<span class="text-[9px] font-bold px-1.5 py-0.2 bg-emerald-100 text-emerald-700 rounded-md">New</span>
+</a>
+</div>
+</div>
+<!-- Saved Link -->
+<a class="flex items-center gap-3 px-3 py-2 font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 rounded-xl transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Saved</span>
+</a>
+</nav>
+</div>
+<!-- Bottom Sidebar Section -->
+<div class="p-3 border-t border-slate-200/70 space-y-0.5 bg-[#F9F9F9] text-[13px]">
+<a class="flex items-center gap-3 px-3 py-2 font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 rounded-xl transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 rounded-xl transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Support &amp; FAQ</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 rounded-xl transition-colors" href="#">
+<svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>More</span>
+</a>
+</div>
+</aside>
+<!-- END: LeftSidebar -->
+<!-- BEGIN: MainContentArea -->
+<div class="flex-1 ml-64 min-h-screen flex flex-col bg-white">
+<!-- Top Bar with Global Search, Studio Banner & Utility Controls -->
+<!-- BEGIN: TopBar -->
+<header class="sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-slate-100 px-8 py-3 flex items-center justify-between gap-4">
+<!-- Global Search Box -->
+<div class="relative w-80">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+<input class="w-full pl-9 pr-4 py-1.5 text-xs bg-slate-100/70 border-none rounded-full placeholder-slate-400 focus:bg-white focus:ring-2 focus:ring-emerald-500 transition-all" placeholder="Search syllabus, topics... ⌘K" type="text"/>
+</div>
+<!-- Center Top Announcement Banner Pill -->
+<div class="hidden lg:flex items-center gap-2.5 px-3.5 py-1 bg-slate-50 border border-slate-200/80 rounded-full text-xs text-slate-700 shadow-2xs hover:border-slate-300 transition-colors" data-purpose="coursework-studio-banner">
+<span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="font-normal text-slate-600">Working on your IA, EE, or TOK? <strong class="font-medium text-slate-800">Try the new AI Essay Studio</strong></span>
+<a class="ml-1 inline-flex items-center gap-1 font-semibold text-xs px-2.5 py-0.5 rounded-full bg-white text-slate-800 border border-slate-200 hover:bg-slate-100 hover:text-black transition" href="#">
+          Open <span>→</span>
+</a>
+</div>
+<!-- Right Utility Actions -->
+<div class="flex items-center gap-3">
+<!-- Community / Study room -->
+<button aria-label="Study Rooms" class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-colors relative" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Pomodoro Timer -->
+<button aria-label="Timer" class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-colors" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Notification Bell with subtle dot -->
+<button aria-label="Notifications" class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-colors relative" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-rose-500 rounded-full ring-2 ring-white"></span>
+</button>
+<!-- Streak Count Indicator -->
+<div class="flex items-center gap-1 px-2.5 py-1 bg-amber-50/90 border border-amber-200/70 rounded-full text-xs font-semibold text-amber-700 shadow-2xs">
+<svg class="w-3.5 h-3.5 fill-amber-500 text-amber-500" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.527.82-1.168 2.062-1.393 3.096A7.05 7.05 0 007.4 6.84C5.972 8.232 5 10.15 5 12.25c0 3.993 3.328 7.25 7.424 7.25 4.096 0 7.424-3.257 7.424-7.25 0-2.457-1.332-4.664-3.328-5.918-.535-.337-1.125-.595-1.748-.756.284.819.387 1.693.303 2.548-.063.639-.281 1.25-.632 1.776a3.52 3.52 0 01-1.31-2.222c-.17-.899-.188-1.848-.124-2.736.035-.487.104-.972.203-1.444.07-.33.096-.66.082-.993z" fill-rule="evenodd"></path>
+</svg>
+<span>7 streak</span>
+</div>
+<!-- Sprout Avatar Profile Leaf Badge -->
+<div class="flex items-center gap-2 pl-1">
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-600 via-teal-500 to-emerald-400 p-[2px] shadow-sm cursor-pointer hover:ring-2 hover:ring-emerald-400/50 transition">
+<div class="w-full h-full bg-white rounded-full flex items-center justify-center overflow-hidden">
+<!-- Leaf Avatar Illustration -->
+<svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21V11m0 0a5 5 0 015-5c0 3-2 5-5 5zm0 0a5 5 0 00-5-5c0 3 2 5 5 5z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- END: TopBar -->
+<!-- Main Body Container with Nature Horizon Wash Gradient -->
+<main class="flex-1 relative overflow-hidden">
+<!-- Soft misty mountain & dawn horizon backdrop -->
+<div class="nature-sky-wash absolute inset-x-0 top-0 h-96 -z-10 pointer-events-none"></div>
+<div class="max-w-6xl mx-auto px-8 py-8 space-y-10">
+<!-- BEGIN: HeroGreetingRow -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-2" data-purpose="hero-greeting">
+<!-- Left: Elegant Greeting & Exam Countdown -->
+<div class="lg:col-span-5 space-y-2">
+<h1 class="text-4xl tracking-tight text-slate-900 leading-[1.15]">
+<span class="font-extrabold text-slate-900 block">Good evening,</span>
+<span class="font-medium text-slate-400 block mt-0.5 font-serif italic text-3xl">Harris</span>
+</h1>
+<p class="text-sm font-medium text-slate-500 pt-1 flex items-center gap-2">
+<span class="inline-flex items-center justify-center w-2 h-2 rounded-full bg-emerald-500"></span>
+              IB Diploma • 42 Days Remaining until May exams
+            </p>
+</div>
+<!-- Right: Sprout Daily Hero Banner -->
+<div class="lg:col-span-7">
+<div class="relative overflow-hidden rounded-3xl border border-sky-200/60 shadow-md bg-gradient-to-r from-[#D7EEFB] via-[#E9F5FF] to-[#D5ECFA] p-5 h-44 flex items-center justify-between">
+<!-- Subtle pixel scenery decor: soft sun, clouds, peaceful stream -->
+<div class="absolute inset-0 pointer-events-none opacity-40">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 600 200">
+<circle cx="520" cy="40" fill="#FDE047" opacity="0.6" r="16"></circle>
+<path d="M 0 160 Q 150 140 300 170 T 600 150 L 600 200 L 0 200 Z" fill="#93C5FD" opacity="0.4"></path>
+<path d="M 0 180 Q 200 170 400 185 T 600 175 L 600 200 L 0 200 Z" fill="#60A5FA" opacity="0.3"></path>
+<!-- Tiny pixel fishes -->
+<circle cx="420" cy="180" fill="#3B82F6" r="2.5"></circle>
+<circle cx="480" cy="185" fill="#3B82F6" r="2.5"></circle>
+<circle cx="360" cy="175" fill="#3B82F6" r="2.5"></circle>
+</svg>
+</div>
+<!-- Content on the Left of Banner -->
+<div class="relative z-10 space-y-3 max-w-[260px]">
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-0.5 text-[11px] font-extrabold tracking-wider text-slate-900 bg-white/90 rounded-md shadow-2xs border border-white">
+                    SPROUT DAILY #2
+                  </span>
+</div>
+<p class="text-xs text-slate-700 leading-snug font-medium">
+                  5 curated IB questions tailored to your weakest subtopics.
+                </p>
+<div>
+<a class="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-black text-white text-xs font-semibold rounded-full shadow-sm hover:shadow transition group" href="#">
+<span>Start Practice</span>
+<span class="group-hover:translate-x-0.5 transition-transform">→</span>
+</a>
+</div>
+</div>
+<!-- Mascot / Scene on Right of Banner -->
+<div class="relative z-10 flex items-center pr-3">
+<div class="relative flex items-center justify-center">
+<!-- Cute Sprout Mascot Art (Vector/SVG styled) sitting tranquilly -->
+<div class="w-28 h-28 relative flex items-center justify-center">
+<svg class="w-28 h-28 drop-shadow-md" viewbox="0 0 120 120">
+<!-- Soft shadow under mascot -->
+<ellipse cx="60" cy="98" fill="#64748B" opacity="0.2" rx="34" ry="7"></ellipse>
+<!-- Mascot Head / Body: Rounded cute dark navy ninja/sprout character -->
+<rect fill="#1E293B" height="46" rx="20" width="50" x="35" y="42"></rect>
+<!-- Violet headband -->
+<rect fill="#7C3AED" height="12" rx="3" width="50" x="35" y="50"></rect>
+<polygon fill="#7C3AED" points="85,53 98,48 93,58"></polygon>
+<!-- Big cute eyes -->
+<ellipse cx="50" cy="56" fill="#FFFFFF" rx="4" ry="4"></ellipse>
+<ellipse cx="70" cy="56" fill="#FFFFFF" rx="4" ry="4"></ellipse>
+<circle cx="51" cy="55.5" fill="#0F172A" r="1.5"></circle>
+<circle cx="71" cy="55.5" fill="#0F172A" r="1.5"></circle>
+<!-- Sprout leaf atop head -->
+<path d="M60 42 C60 25 72 24 74 20 C64 22 61 30 60 42 Z" fill="#22C55E"></path>
+<path d="M60 42 C60 28 50 26 47 22 C56 24 59 32 60 42 Z" fill="#16A34A"></path>
+<!-- Peaceful tiny blush -->
+<ellipse cx="44" cy="65" fill="#FDA4AF" opacity="0.8" rx="3" ry="1.5"></ellipse>
+<ellipse cx="76" cy="65" fill="#FDA4AF" opacity="0.8" rx="3" ry="1.5"></ellipse>
+</svg>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: HeroGreetingRow -->
+<!-- BEGIN: MySubjectsSection -->
+<section class="space-y-4 pt-2" data-purpose="my-subjects" id="subjects-section">
+<!-- Section Title & Secondary Control -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<h2 class="text-xl font-bold tracking-tight text-slate-900">My subjects</h2>
+<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200/60">6 subjects</span>
+</div>
+<button class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors px-2.5 py-1.5 rounded-lg hover:bg-slate-100" type="button">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Change subjects</span>
+</button>
+</div>
+<!-- 3x2 Grid of 6 Subject Cards (Matching Reference Card Anatomy) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+<!-- Card 1: English Literature HL -->
+<article class="group relative h-48 rounded-3xl p-6 flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 bg-gradient-to-br from-[#1E40AF] via-[#1D4ED8] to-[#172554] cursor-pointer">
+<!-- Right side artistic motif: Glowing book & ink bottle motif -->
+<div class="absolute right-0 top-0 bottom-0 w-3/5 opacity-80 group-hover:scale-105 group-hover:opacity-95 transition-all duration-500 pointer-events-none">
+<svg class="w-full h-full" fill="none" viewbox="0 0 240 200">
+<circle cx="170" cy="100" fill="url(#blue-radial)" opacity="0.6" r="90"></circle>
+<!-- Stylized open book & feather quill -->
+<path d="M120 150 C140 130 170 130 190 145 L190 85 C170 70 140 70 120 85 Z" fill="#60A5FA" opacity="0.45"></path>
+<path d="M120 150 C100 130 70 130 50 145 L50 85 C70 70 100 70 120 85 Z" fill="#93C5FD" opacity="0.35"></path>
+<path d="M150 40 C170 60 185 95 190 140" opacity="0.7" stroke="#BFDBFE" stroke-linecap="round" stroke-width="3"></path>
+<circle cx="155" cy="50" fill="#93C5FD" opacity="0.5" r="12"></circle>
+<defs>
+<radialgradient cx="50%" cy="50%" id="blue-radial" r="50%">
+<stop offset="0%" stop-color="#3B82F6"></stop>
+<stop offset="100%" stop-color="#1E3A8A" stop-opacity="0"></stop>
+</radialgradient>
+</defs>
+</svg>
+</div>
+<!-- Top Subject Title Only -->
+<div class="relative z-10">
+<h3 class="text-white text-lg font-bold tracking-tight">English Literature HL</h3>
+</div>
+<!-- Bottom White 'Open >' Pill Button -->
+<div class="relative z-10">
+<button class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white text-slate-900 text-xs font-bold rounded-full shadow-sm hover:bg-slate-100 transition-colors" type="button">
+<span>Open</span>
+<span class="text-slate-400 font-semibold group-hover:translate-x-0.5 transition-transform">›</span>
+</button>
+</div>
+</article>
+<!-- Card 2: French B SL -->
+<article class="group relative h-48 rounded-3xl p-6 flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 bg-gradient-to-br from-[#2563EB] via-[#3B82F6] to-[#4338CA] cursor-pointer">
+<!-- Right side artistic motif: Eiffel tower silhouette & clouds -->
+<div class="absolute right-0 top-0 bottom-0 w-3/5 opacity-80 group-hover:scale-105 group-hover:opacity-95 transition-all duration-500 pointer-events-none">
+<svg class="w-full h-full" fill="none" viewbox="0 0 240 200">
+<circle cx="160" cy="100" fill="#6366F1" opacity="0.5" r="85"></circle>
+<!-- Stylized Eiffel architectural lines -->
+<polygon fill="#1E3A8A" opacity="0.4" points="160,30 185,170 135,170"></polygon>
+<polygon fill="#DBEAFE" opacity="0.4" points="160,30 170,170 150,170"></polygon>
+<rect fill="#93C5FD" height="4" opacity="0.8" rx="2" width="30" x="145" y="95"></rect>
+<rect fill="#BFDBFE" height="6" opacity="0.8" rx="2" width="44" x="138" y="135"></rect>
+<!-- Floating soft cloud -->
+<ellipse cx="120" cy="65" fill="#FFFFFF" opacity="0.25" rx="25" ry="12"></ellipse>
+<ellipse cx="195" cy="80" fill="#FFFFFF" opacity="0.2" rx="30" ry="14"></ellipse>
+</svg>
+</div>
+<!-- Top Subject Title Only -->
+<div class="relative z-10">
+<h3 class="text-white text-lg font-bold tracking-tight">French B SL</h3>
+</div>
+<!-- Bottom White 'Open >' Pill Button -->
+<div class="relative z-10">
+<button class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white text-slate-900 text-xs font-bold rounded-full shadow-sm hover:bg-slate-100 transition-colors" type="button">
+<span>Open</span>
+<span class="text-slate-400 font-semibold group-hover:translate-x-0.5 transition-transform">›</span>
+</button>
+</div>
+</article>
+<!-- Card 3: History HL -->
+<article class="group relative h-48 rounded-3xl p-6 flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 bg-gradient-to-br from-[#451A03] via-[#5C240A] to-[#2E1004] cursor-pointer">
+<!-- Right side artistic motif: Antique parchment & seal motif -->
+<div class="absolute right-0 top-0 bottom-0 w-3/5 opacity-80 group-hover:scale-105 group-hover:opacity-95 transition-all duration-500 pointer-events-none">
+<svg class="w-full h-full" fill="none" viewbox="0 0 240 200">
+<circle cx="160" cy="110" fill="#B45309" opacity="0.35" r="75"></circle>
+<!-- Overlapping parchment tiles -->
+<rect fill="#F59E0B" height="90" opacity="0.35" rx="8" transform="rotate(15 120 45)" width="70" x="120" y="45"></rect>
+<rect fill="#D97706" height="85" opacity="0.45" rx="8" transform="rotate(-10 145 75)" width="65" x="145" y="75"></rect>
+<!-- Antique seal -->
+<circle cx="180" cy="140" fill="#B91C1C" opacity="0.6" r="22"></circle>
+<circle cx="180" cy="140" opacity="0.5" r="16" stroke="#FEF3C7" stroke-width="2"></circle>
+</svg>
+</div>
+<!-- Top Subject Title Only -->
+<div class="relative z-10">
+<h3 class="text-white text-lg font-bold tracking-tight">History HL</h3>
+</div>
+<!-- Bottom White 'Open >' Pill Button -->
+<div class="relative z-10">
+<button class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white text-slate-900 text-xs font-bold rounded-full shadow-sm hover:bg-slate-100 transition-colors" type="button">
+<span>Open</span>
+<span class="text-slate-400 font-semibold group-hover:translate-x-0.5 transition-transform">›</span>
+</button>
+</div>
+</article>
+<!-- Card 4: Biology HL -->
+<article class="group relative h-48 rounded-3xl p-6 flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 bg-gradient-to-br from-[#059669] via-[#10B981] to-[#064E3B] cursor-pointer">
+<!-- Right side artistic motif: Glowing meadow flora & butterfly artwork -->
+<div class="absolute right-0 top-0 bottom-0 w-3/5 opacity-80 group-hover:scale-105 group-hover:opacity-95 transition-all duration-500 pointer-events-none">
+<svg class="w-full h-full" fill="none" viewbox="0 0 240 200">
+<circle cx="170" cy="90" fill="#34D399" opacity="0.4" r="80"></circle>
+<!-- Organic abstract leaf / cell curves -->
+<path d="M120 170 C140 100 200 80 210 50 C180 120 140 140 120 170 Z" fill="#A7F3D0" opacity="0.5"></path>
+<path d="M150 160 C170 120 220 110 230 80 C200 130 170 140 150 160 Z" fill="#6EE7B7" opacity="0.4"></path>
+<!-- Little glowing spores -->
+<circle cx="130" cy="70" fill="#ECFDF5" opacity="0.7" r="6"></circle>
+<circle cx="180" cy="40" fill="#ECFDF5" opacity="0.8" r="4"></circle>
+<circle cx="160" cy="120" fill="#ECFDF5" opacity="0.6" r="5"></circle>
+</svg>
+</div>
+<!-- Top Subject Title Only -->
+<div class="relative z-10">
+<h3 class="text-white text-lg font-bold tracking-tight">Biology HL</h3>
+</div>
+<!-- Bottom White 'Open >' Pill Button -->
+<div class="relative z-10">
+<button class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white text-slate-900 text-xs font-bold rounded-full shadow-sm hover:bg-slate-100 transition-colors" type="button">
+<span>Open</span>
+<span class="text-slate-400 font-semibold group-hover:translate-x-0.5 transition-transform">›</span>
+</button>
+</div>
+</article>
+<!-- Card 5: Theory of Knowledge -->
+<article class="group relative h-48 rounded-3xl p-6 flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 bg-gradient-to-br from-[#7C3AED] via-[#8B5CF6] to-[#4C1D95] cursor-pointer">
+<!-- Right side artistic motif: Conceptual thought wave & scroll -->
+<div class="absolute right-0 top-0 bottom-0 w-3/5 opacity-80 group-hover:scale-105 group-hover:opacity-95 transition-all duration-500 pointer-events-none">
+<svg class="w-full h-full" fill="none" viewbox="0 0 240 200">
+<circle cx="165" cy="100" fill="#A78BFA" opacity="0.4" r="80"></circle>
+<!-- Thought waves / philosophical mind ripples -->
+<path d="M120 70 Q 150 40 180 70 T 240 70" fill="none" opacity="0.6" stroke="#DDD6FE" stroke-width="4"></path>
+<path d="M110 100 Q 140 70 170 100 T 230 100" fill="none" opacity="0.7" stroke="#C4B5FD" stroke-width="4"></path>
+<path d="M125 130 Q 155 100 185 130 T 245 130" fill="none" opacity="0.5" stroke="#EDE9FE" stroke-width="4"></path>
+<circle cx="170" cy="85" fill="#FFFFFF" opacity="0.6" r="8"></circle>
+</svg>
+</div>
+<!-- Top Subject Title Only -->
+<div class="relative z-10">
+<h3 class="text-white text-lg font-bold tracking-tight">Theory of Knowledge</h3>
+</div>
+<!-- Bottom White 'Open >' Pill Button -->
+<div class="relative z-10">
+<button class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white text-slate-900 text-xs font-bold rounded-full shadow-sm hover:bg-slate-100 transition-colors" type="button">
+<span>Open</span>
+<span class="text-slate-400 font-semibold group-hover:translate-x-0.5 transition-transform">›</span>
+</button>
+</div>
+</article>
+<!-- Card 6: Chemistry HL -->
+<article class="group relative h-48 rounded-3xl p-6 flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 bg-gradient-to-br from-[#0D9488] via-[#0F766E] to-[#115E59] cursor-pointer">
+<!-- Right side artistic motif: Crystalline structure & chemical bond hexagons -->
+<div class="absolute right-0 top-0 bottom-0 w-3/5 opacity-80 group-hover:scale-105 group-hover:opacity-95 transition-all duration-500 pointer-events-none">
+<svg class="w-full h-full" fill="none" viewbox="0 0 240 200">
+<circle cx="160" cy="95" fill="#2DD4BF" opacity="0.35" r="75"></circle>
+<!-- Molecular crystal hexagons -->
+<polygon fill="#14B8A6" opacity="0.4" points="170,40 195,55 195,85 170,100 145,85 145,55" stroke="#99F6E4" stroke-width="2.5"></polygon>
+<polygon fill="#0D9488" opacity="0.5" points="195,85 220,100 220,130 195,145 170,130 170,100" stroke="#CCFBF1" stroke-width="2.5"></polygon>
+<polygon fill="#115E59" opacity="0.3" points="145,85 170,100 170,130 145,145 120,130 120,100" stroke="#5EEAD4" stroke-width="2.5"></polygon>
+<!-- Glowing bond nodes -->
+<circle cx="170" cy="40" fill="#FFFFFF" r="4"></circle>
+<circle cx="195" cy="55" fill="#FFFFFF" r="4"></circle>
+<circle cx="170" cy="100" fill="#CCFBF1" r="5"></circle>
+</svg>
+</div>
+<!-- Top Subject Title Only -->
+<div class="relative z-10">
+<h3 class="text-white text-lg font-bold tracking-tight">Chemistry HL</h3>
+</div>
+<!-- Bottom White 'Open >' Pill Button -->
+<div class="relative z-10">
+<button class="inline-flex items-center gap-1.5 px-4 py-1.5 bg-white text-slate-900 text-xs font-bold rounded-full shadow-sm hover:bg-slate-100 transition-colors" type="button">
+<span>Open</span>
+<span class="text-slate-400 font-semibold group-hover:translate-x-0.5 transition-transform">›</span>
+</button>
+</div>
+</article>
+</div>
+</section>
+<!-- END: MySubjectsSection -->
+</div>
+</main>
+<!-- END: MainContentArea -->
+</div>
+</body></html>

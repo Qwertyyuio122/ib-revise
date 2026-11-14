@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "generatedAt": "2026-11-11T19:42:58.956Z",
+  "mode": "hybrid",
+  "totalQuestions": 30000,
+  "totalDiagrams": 4177,
+  "countsBySubject": {
+    "math": 8000,
+    "chem": 7000,
+    "bio": 6500,
+    "fr": 6500,
+    "hist": 1000,
+    "eng": 1000
+  },
+  "diagramsBySubject": {
+    "math": 4177,
+    "chem": 0,
+    "bio": 0,
+    "fr": 0,
+    "hist": 0,
+    "eng": 0
+  },
+  "shards": [
+    {
+      "file": "math-001.jsonl.gz",
+      "subjectSlug": "math",
+      "count": 2500,
+      "diagramCount": 2500,
+      "sha256": "f87298c6d8d1a38651e172590d10c960b611ec8ee455f3a2aec2f2cb6cf072cd"
+    },
+    {
+      "file": "math-002.jsonl.gz",
+      "subjectSlug": "math",
+      "count": 2500,
+      "diagramCount": 810,
+      "sha256": "70929d216dd2a1261b5b4a2cfc7c91fd0a708a928107f56ac2b5f1317120b273"
+    },
+    {
+      "file": "math-003.jsonl.gz",
+      "subjectSlug": "math",
+      "count": 2500,
+      "diagramCount": 673,
+      "sha256": "9f6ccb77e567c8fc81911be728f11df431854aa0ee7da265ebae9154b97cfd96"
+    },
+    {
+      "file": "math-004.jsonl.gz",
+      "subjectSlug": "math",
+      "count": 500,
+      "diagramCount": 194,
+      "sha256": "d2f1500149f333c7c56596b9b489a7f3f37b6cc9dd31bb3689e62dd2cb07948f"
+    },
+    {
+      "file": "chem-001.jsonl.gz",
+      "subjectSlug": "chem",
+      "count": 2500,
+      "diagramCount": 0,
+      "sha256": "0541ec43fc1ae4266493b9aacede354524f357b767522d526e7b7179f489e15e"
+    },
+    {
+      "file": "chem-002.jsonl.gz",
+      "subjectSlug": "chem",
+      "count": 2500,
+      "diagramCount": 0,
+      "sha256": "cc4b51f05615fb877fa494c084bbe3ed6e9e7c6d72a8e8fe09f9a59d06620f26"
+    },
+    {
+      "file": "chem-003.jsonl.gz",
+      "subjectSlug": "chem",
+      "count": 2000,
+      "diagramCount": 0,
+      "sha256": "20eeda14d23517f1499339605dfabe6e4295562df771d3aec279dbaea48ef46a"
+    },
+    {
+      "file": "bio-001.jsonl.gz",
+      "subjectSlug": "bio",
+      "count": 2500,
+      "diagramCount": 0,
+      "sha256": "fe06aca49b2531bf7028485f9de6a8c12bdd0c7cdac717871beb5dca56a3e7c4"
+    },
+    {
+      "file": "bio-002.jsonl.gz",
+      "subjectSlug": "bio",
+      "count": 2500,
+      "diagramCount": 0,
+      "sha256": "7bdbb44cc164d42a7ee438f3bd421b1f9f6d014e07c99a88f71356d476b2cc43"
+    },
+    {
+      "file": "bio-003.jsonl.gz",
+      "subjectSlug": "bio",
+      "count": 1500,
+      "diagramCount": 0,
+      "sha256": "e5f5db632ff114371c745e5a5cdc9a3a4ad39da1c21815ac99107ab03676ad3a"
+    },
+    {
+      "file": "fr-001.jsonl.gz",
+      "subjectSlug": "fr",
+      "count": 2500,
+      "diagramCount": 0,
+      "sha256": "dd317a6035738a7c8d23a11a620cbf7536aae62cb6e8a0a83ad2032b4ab2aa12"
+    },
+    {
+      "file": "fr-002.jsonl.gz",
+      "subjectSlug": "fr",
+      "count": 2500,
+      "diagramCount": 0,
+      "sha256": "e13f2b42761c626d28900dd7ca69208bce593a6c12801bf2f0988df0b983457e"
+    },
+    {
+      "file": "fr-003.jsonl.gz",
+      "subjectSlug": "fr",
+      "count": 1500,
+      "diagramCount": 0,
+      "sha256": "920e869abce60b33ab2d11ff85baf84cfcd599ce03500c432c23b2d92ef6df25"
+    },
+    {
+      "file": "hist-001.jsonl.gz",
+      "subjectSlug": "hist",
+      "count": 1000,
+      "diagramCount": 0,
+      "sha256": "28113f36f4cb886e5aa0de56042878230808c877394e7ab24980e40e575002b1"
+    },
+    {
+      "file": "eng-001.jsonl.gz",
+      "subjectSlug": "eng",
+      "count": 1000,
+      "diagramCount": 0,
+      "sha256": "8dfa6ba1e9d06f5856a1d5e8fe922aa5db3ab5753163eec299c5bf8aff3347a0"
+    }
+  ]
+}
