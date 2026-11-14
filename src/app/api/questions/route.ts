@@ -21,6 +21,49 @@ const DB_ID_TO_SUBJECT_CODE: Record<string, string> = {
   chemistry_sl: 'CHEM_SL',
 };
 
+function filterDummyQuestions(params: {
+  subjectParam: string | null;
+  topicIdParam: string | null;
+  paperParam: string | null;
+  difficultyParam: string | null;
+  searchQuery: string | undefined;
+  cursor: string | null;
+  limit: number;
+}): SampleQuestion[] {
+  const {
+    subjectParam,
+    topicIdParam,
+    paperParam,
+    difficultyParam,
+    searchQuery,
+    cursor,
+    limit,
+  } = params;
+
+  return DUMMY_SAMPLE_QUESTIONS.filter((q) => {
+    if (subjectParam && q.subjectCode !== subjectParam) return false;
+    if (topicIdParam && q.topicId !== topicIdParam) return false;
+    if (paperParam && q.paper !== paperParam) return false;
+    if (difficultyParam) {
+      const parsedDiff = Number.parseInt(difficultyParam, 10);
+      if (Number.isFinite(parsedDiff) && q.difficulty !== parsedDiff) {
+        return false;
+      }
+    }
+    if (cursor && q.id <= cursor) return false;
+    if (searchQuery) {
+      const lower = searchQuery.toLowerCase();
+      return (
+        q.promptMarkdown.toLowerCase().includes(lower) ||
+        q.markSchemeMarkdown.toLowerCase().includes(lower) ||
+        q.topicLabel.toLowerCase().includes(lower) ||
+        q.session.toLowerCase().includes(lower)
+      );
+    }
+    return true;
+  }).slice(0, limit);
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const subjectParam = searchParams.get('subject');
@@ -29,10 +72,11 @@ export async function GET(request: NextRequest) {
   const difficultyParam = searchParams.get('difficulty');
   const searchQuery = searchParams.get('q')?.trim();
   const cursor = searchParams.get('cursor');
-  const limit = Math.min(
-    parseInt(searchParams.get('limit') || '20', 10),
-    50
-  );
+
+  const rawLimit = Number.parseInt(searchParams.get('limit') || '20', 10);
+  const limit = Number.isFinite(rawLimit)
+    ? Math.min(Math.max(rawLimit, 1), 50)
+    : 20;
 
   try {
     const supabase = await createClient();
@@ -74,13 +118,13 @@ export async function GET(request: NextRequest) {
     }
 
     if (paperParam && ['P1', 'P2', 'P3'].includes(paperParam)) {
-      const paperNum = parseInt(paperParam.replace('P', ''), 10);
+      const paperNum = Number.parseInt(paperParam.replace('P', ''), 10);
       query = query.eq('paper_number', paperNum);
     }
 
     if (difficultyParam) {
-      const diff = parseInt(difficultyParam, 10);
-      if (diff >= 1 && diff <= 7) {
+      const diff = Number.parseInt(difficultyParam, 10);
+      if (Number.isFinite(diff) && diff >= 1 && diff <= 7) {
         query = query.eq('difficulty', diff);
       }
     }
@@ -98,26 +142,16 @@ export async function GET(request: NextRequest) {
 
     const { data, error } = await query;
 
-    if (error || !data || data.length === 0) {
-      const fallback = DUMMY_SAMPLE_QUESTIONS.filter((q) => {
-        if (subjectParam && q.subjectCode !== subjectParam) return false;
-        if (paperParam && q.paper !== paperParam) return false;
-        if (
-          difficultyParam &&
-          q.difficulty !== parseInt(difficultyParam, 10)
-        ) {
-          return false;
-        }
-        if (searchQuery) {
-          const lower = searchQuery.toLowerCase();
-          return (
-            q.promptMarkdown.toLowerCase().includes(lower) ||
-            q.topicLabel.toLowerCase().includes(lower) ||
-            q.session.toLowerCase().includes(lower)
-          );
-        }
-        return true;
-      }).slice(0, limit);
+    if (error || !data) {
+      const fallback = filterDummyQuestions({
+        subjectParam,
+        topicIdParam,
+        paperParam,
+        difficultyParam,
+        searchQuery,
+        cursor,
+        limit,
+      });
 
       return NextResponse.json({
         questions: fallback,
@@ -129,7 +163,7 @@ export async function GET(request: NextRequest) {
     const mappedQuestions: SampleQuestion[] = data.map((row) => {
       const topicObj = Array.isArray(row.topics)
         ? row.topics[0]
-        : (row.topics as { title?: string; topic_number?: number } | null);
+        : (row.topics as { title?: string; topic_number?: string | number } | null);
 
       const paperNum = (row.paper_number as number) || 1;
       const paperCode: 'P1' | 'P2' | 'P3' =
@@ -140,10 +174,15 @@ export async function GET(request: NextRequest) {
         7
       ) as 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
+      const options = Array.isArray(row.mcq_options)
+        ? (row.mcq_options as string[])
+        : undefined;
+
       return {
         id: row.id as string,
         subjectCode:
-          DB_ID_TO_SUBJECT_CODE[row.subject_id as string] || 'BIO_HL',
+          DB_ID_TO_SUBJECT_CODE[row.subject_id as string] ||
+          (row.subject_id as string),
         topicId: row.topic_id as string,
         topicLabel: topicObj?.title
           ? `Topic ${topicObj.topic_number ?? 1} • ${topicObj.title}`
@@ -157,6 +196,7 @@ export async function GET(request: NextRequest) {
             ? 'EXTENDED'
             : 'SHORT',
         promptMarkdown: row.prompt_text as string,
+        options,
         markSchemeMarkdown: row.official_markscheme_text as string,
         maxMarks: (row.mark_value as number) || 4,
         difficulty: diffNum,
@@ -174,8 +214,18 @@ export async function GET(request: NextRequest) {
       source: 'supabase_fts',
     });
   } catch {
+    const fallback = filterDummyQuestions({
+      subjectParam,
+      topicIdParam,
+      paperParam,
+      difficultyParam,
+      searchQuery,
+      cursor,
+      limit,
+    });
+
     return NextResponse.json({
-      questions: DUMMY_SAMPLE_QUESTIONS.slice(0, limit),
+      questions: fallback,
       nextCursor: null,
       source: 'sample_fallback',
     });

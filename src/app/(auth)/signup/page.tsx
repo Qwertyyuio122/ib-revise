@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowRight, Lock, Mail, User, Calendar } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { PillButton } from '@/components/ui/PillButton';
+import { GoogleAuthButton } from '@/components/auth/GoogleAuthButton';
 
 const EXAM_SESSIONS = [
   'May 2026 Session',
@@ -47,38 +48,55 @@ export default function SignupPage() {
     }
 
     if (data.user && data.session) {
-      await supabase.from('profiles').upsert({
+      const { error: profileError } = await supabase.from('profiles').upsert({
         id: data.user.id,
         full_name: fullName.trim() || 'IB Candidate',
         exam_session: examSession,
       });
 
-      await supabase.from('ib_core_items').insert([
-        {
-          user_id: data.user.id,
-          type: 'TOK_ESSAY',
-          title: 'TOK Exhibition & Prescribed Essay Outline',
-          draft_status: 'OUTLINE',
-          word_count: 0,
-          target_word_count: 1600,
-        },
-        {
-          user_id: data.user.id,
-          type: 'EXTENDED_ESSAY',
-          title: 'Extended Essay Research & First Draft (4,000w)',
-          draft_status: 'OUTLINE',
-          word_count: 0,
-          target_word_count: 4000,
-        },
-        {
-          user_id: data.user.id,
-          type: 'IA',
-          title: 'Subject Internal Assessments (6 Subjects)',
-          draft_status: 'OUTLINE',
-          word_count: 0,
-          target_word_count: 3000,
-        },
-      ]);
+      if (profileError) {
+        console.error('Failed to provision profile:', profileError.message);
+      }
+
+      const { count } = await supabase
+        .from('ib_core_items')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', data.user.id);
+
+      if (!count || count === 0) {
+        const { error: coreError } = await supabase
+          .from('ib_core_items')
+          .insert([
+            {
+              user_id: data.user.id,
+              type: 'TOK_ESSAY',
+              title: 'TOK Exhibition & Prescribed Essay Outline',
+              draft_status: 'OUTLINE',
+              word_count: 0,
+              target_word_count: 1600,
+            },
+            {
+              user_id: data.user.id,
+              type: 'EXTENDED_ESSAY',
+              title: 'Extended Essay Research & First Draft (4,000w)',
+              draft_status: 'OUTLINE',
+              word_count: 0,
+              target_word_count: 4000,
+            },
+            {
+              user_id: data.user.id,
+              type: 'IA',
+              title: 'Subject Internal Assessments (6 Subjects)',
+              draft_status: 'OUTLINE',
+              word_count: 0,
+              target_word_count: 3000,
+            },
+          ]);
+
+        if (coreError) {
+          console.error('Failed to seed starter IB Core items:', coreError.message);
+        }
+      }
 
       router.push('/dashboard');
       router.refresh();
@@ -139,7 +157,21 @@ export default function SignupPage() {
               </PillButton>
             </div>
           ) : (
-            <form onSubmit={handleSignUp} className="mt-7 space-y-4">
+            <>
+              <div className="mt-7">
+                <GoogleAuthButton
+                  label="Sign up with Google"
+                  onError={(msg) => setErrorMessage(msg)}
+                />
+              </div>
+
+              <div className="my-6 flex items-center gap-3 text-[12px] text-text-secondary">
+                <div className="h-px flex-1 bg-border-subtle" />
+                <span>or register with email</span>
+                <div className="h-px flex-1 bg-border-subtle" />
+              </div>
+
+              <form onSubmit={handleSignUp} className="space-y-4">
               <div>
                 <label
                   htmlFor="signup-name"
@@ -249,6 +281,7 @@ export default function SignupPage() {
                 </PillButton>
               </div>
             </form>
+            </>
           )}
 
           <div className="my-6 border-t border-border-subtle" />

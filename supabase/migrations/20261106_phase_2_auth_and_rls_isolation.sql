@@ -66,3 +66,39 @@ BEGIN
   END IF;
 END
 $$;
+
+-- Automatically provision profile and starter IB Core milestones on user signup
+-- (works even when email confirmation is enabled and no client session exists yet).
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  INSERT INTO public.profiles (id, full_name, exam_session)
+  VALUES (
+    NEW.id,
+    coalesce(
+      NEW.raw_user_meta_data->>'full_name',
+      NEW.raw_user_meta_data->>'name',
+      'IB Candidate'
+    ),
+    coalesce(NEW.raw_user_meta_data->>'exam_session', 'May 2026 Session')
+  )
+  ON CONFLICT (id) DO NOTHING;
+
+  INSERT INTO public.ib_core_items (user_id, type, title, draft_status, word_count, target_word_count)
+  VALUES
+    (NEW.id, 'TOK_ESSAY', 'TOK Exhibition & Prescribed Essay Outline', 'OUTLINE', 0, 1600),
+    (NEW.id, 'EXTENDED_ESSAY', 'Extended Essay Research & First Draft (4,000w)', 'OUTLINE', 0, 4000),
+    (NEW.id, 'IA', 'Subject Internal Assessments (6 Subjects)', 'OUTLINE', 0, 3000);
+
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();

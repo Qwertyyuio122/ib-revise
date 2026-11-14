@@ -72,7 +72,7 @@ export function Sidebar({
             className="inline-flex items-center gap-2 text-[20px] font-semibold tracking-[-0.02em] text-text-primary"
           >
             <span>ib revise</span>
-            <span className="h-2 w-2 rounded-full bg-accent-blush shadow-[0_0_10px_#f4a7b9]" />
+            <span className="h-2 w-2 rounded-full bg-accent-blush shadow-blush-bloom" />
           </Link>
           <p className="mt-0.5 text-[13px] text-text-secondary">
             {userSession}

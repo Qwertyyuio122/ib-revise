@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   X,
   RotateCcw,
@@ -18,6 +18,7 @@ import { Subject, SampleQuestion } from '@/types/database';
 import { createClient } from '@/lib/supabase/client';
 import { PillButton } from '@/components/ui/PillButton';
 import { StatusBadge } from '@/components/ui/StatusBadge';
+import { MathMarkdown } from '@/components/ui/MathMarkdown';
 import { cn } from '@/lib/utils';
 
 interface SampleDrawerProps {
@@ -38,8 +39,11 @@ export function SampleDrawer({
     'ALL'
   );
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [liveQuestions, setLiveQuestions] = useState<SampleQuestion[]>([]);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [loadingQuestions, setLoadingQuestions] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const [revealedCardIds, setRevealedCardIds] = useState<
     Record<string, boolean>
@@ -47,16 +51,55 @@ export function SampleDrawer({
   const [revealedSchemeIds, setRevealedSchemeIds] = useState<
     Record<string, boolean>
   >({});
-  const [bookmarkedIds, setBookmarkedIds] = useState<Record<string, boolean>>({
-    q_math_m23_p1_06: true,
-  });
+  const [bookmarkedIds, setBookmarkedIds] = useState<Record<string, boolean>>(
+    {}
+  );
   const [ratedCardIds, setRatedCardIds] = useState<Record<string, string>>({});
 
   useEffect(() => {
     setMode(initialMode);
     setPaperFilter('ALL');
     setSearchQuery('');
+    setDebouncedQuery('');
+    setNextCursor(null);
   }, [initialMode, subject]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery.trim());
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if (!subject) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [subject, onClose]);
+
+  const buildQuestionsUrl = useCallback(
+    (subjectCode: string, cursor?: string | null) => {
+      const params = new URLSearchParams();
+      params.set('subject', subjectCode);
+      params.set('limit', '20');
+      if (paperFilter !== 'ALL') {
+        params.set('paper', paperFilter);
+      }
+      if (debouncedQuery) {
+        params.set('q', debouncedQuery);
+      }
+      if (cursor) {
+        params.set('cursor', cursor);
+      }
+      return `/api/questions?${params.toString()}`;
+    },
+    [paperFilter, debouncedQuery]
+  );
 
   useEffect(() => {
     if (!subject) return;
@@ -64,34 +107,27 @@ export function SampleDrawer({
     let cancelled = false;
     setLoadingQuestions(true);
 
-    const params = new URLSearchParams();
-    params.set('subject', subject.code);
-    params.set('limit', '20');
-    if (paperFilter !== 'ALL') {
-      params.set('paper', paperFilter);
-    }
-    if (searchQuery.trim()) {
-      params.set('q', searchQuery.trim());
-    }
-
-    fetch(`/api/questions?${params.toString()}`)
+    fetch(buildQuestionsUrl(subject.code))
       .then((res) => res.json())
       .then((payload) => {
         if (cancelled) return;
-        if (Array.isArray(payload.questions) && payload.questions.length > 0) {
+        if (Array.isArray(payload.questions)) {
           setLiveQuestions(payload.questions);
+          setNextCursor(
+            typeof payload.nextCursor === 'string' ? payload.nextCursor : null
+          );
         } else {
-          const fallback = DUMMY_SAMPLE_QUESTIONS.filter(
-            (q) => q.subjectCode === subject.code
-          );
-          setLiveQuestions(
-            fallback.length > 0 ? fallback : DUMMY_SAMPLE_QUESTIONS
-          );
+          setLiveQuestions([]);
+          setNextCursor(null);
         }
       })
       .catch(() => {
         if (!cancelled) {
-          setLiveQuestions(DUMMY_SAMPLE_QUESTIONS);
+          const fallback = DUMMY_SAMPLE_QUESTIONS.filter(
+            (q) => q.subjectCode === subject.code
+          );
+          setLiveQuestions(fallback);
+          setNextCursor(null);
         }
       })
       .finally(() => {
@@ -101,38 +137,58 @@ export function SampleDrawer({
     return () => {
       cancelled = true;
     };
-  }, [subject, paperFilter, searchQuery]);
+  }, [subject, buildQuestionsUrl]);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId) {
+      setBookmarkedIds({});
+      return;
+    }
+
+    let cancelled = false;
     const supabase = createClient();
     supabase
       .from('user_question_activity')
       .select('question_id, status')
       .eq('user_id', userId)
-      .then(({ data }) => {
-        if (data && data.length > 0) {
-          const map: Record<string, boolean> = {};
-          data.forEach((row) => {
-            if (row.status === 'BOOKMARKED') {
-              map[row.question_id] = true;
-            }
-          });
-          setBookmarkedIds(map);
-        }
+      .then(({ data, error }) => {
+        if (cancelled || error) return;
+        const map: Record<string, boolean> = {};
+        (data || []).forEach((row) => {
+          if (row.status === 'BOOKMARKED') {
+            map[row.question_id] = true;
+          }
+        });
+        setBookmarkedIds(map);
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, [userId]);
 
   if (!subject) return null;
 
-  const subjectCards = DUMMY_FLASHCARDS.filter(
+  const displayCards = DUMMY_FLASHCARDS.filter(
     (c) => c.subjectCode === subject.code
   );
-  const displayCards =
-    subjectCards.length > 0 ? subjectCards : DUMMY_FLASHCARDS;
 
-  const displayQuestions =
-    liveQuestions.length > 0 ? liveQuestions : DUMMY_SAMPLE_QUESTIONS;
+  const handleLoadMore = async () => {
+    if (!nextCursor || loadingMore) return;
+    setLoadingMore(true);
+    try {
+      const res = await fetch(buildQuestionsUrl(subject.code, nextCursor));
+      const payload = await res.json();
+      if (Array.isArray(payload.questions)) {
+        setLiveQuestions((prev) => [...prev, ...payload.questions]);
+        setNextCursor(
+          typeof payload.nextCursor === 'string' ? payload.nextCursor : null
+        );
+      }
+    } finally {
+      setLoadingMore(false);
+    }
+  };
 
   const toggleCardReveal = (id: string) => {
     setRevealedCardIds((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -143,31 +199,38 @@ export function SampleDrawer({
   };
 
   const toggleBookmark = async (id: string) => {
-    const nextState = !bookmarkedIds[id];
+    const previousState = !!bookmarkedIds[id];
+    const nextState = !previousState;
     setBookmarkedIds((prev) => ({ ...prev, [id]: nextState }));
 
     if (userId) {
       const supabase = createClient();
-      if (nextState) {
-        await supabase.from('user_question_activity').upsert({
-          user_id: userId,
-          question_id: id,
-          status: 'BOOKMARKED',
-          last_practiced_at: new Date().toISOString(),
-        });
-      } else {
-        await supabase
-          .from('user_question_activity')
-          .delete()
-          .eq('user_id', userId)
-          .eq('question_id', id);
+      const { error } = nextState
+        ? await supabase.from('user_question_activity').upsert({
+            user_id: userId,
+            question_id: id,
+            status: 'BOOKMARKED',
+            last_practiced_at: new Date().toISOString(),
+          })
+        : await supabase
+            .from('user_question_activity')
+            .delete()
+            .eq('user_id', userId)
+            .eq('question_id', id);
+
+      if (error) {
+        setBookmarkedIds((prev) => ({ ...prev, [id]: previousState }));
       }
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/65 backdrop-blur-xs transition-opacity">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex justify-end bg-black/65 backdrop-blur-sm transition-opacity"
+    >
       <div
+        onClick={(e) => e.stopPropagation()}
         className="relative flex h-full w-full max-w-2xl flex-col border-l border-border-subtle bg-surface-canvas text-text-primary shadow-2xl"
         role="dialog"
         aria-label={`${subject.name} Study View`}
@@ -185,8 +248,8 @@ export function SampleDrawer({
             </div>
             <p className="mt-1 text-[13px] text-text-secondary">
               {userId
-                ? 'Synced with your private Supabase session • PostgreSQL FTS active'
-                : 'Guest preview mode • PostgreSQL Full-Text Search active'}
+                ? 'Synced with your study session'
+                : 'Guest preview mode — sign in to save bookmarks'}
             </p>
           </div>
 
@@ -206,7 +269,7 @@ export function SampleDrawer({
               variant={mode === 'questions' ? 'primary' : 'secondary'}
               onClick={() => setMode('questions')}
             >
-              Question Bank ({displayQuestions.length})
+              Question Bank ({liveQuestions.length})
             </PillButton>
             <PillButton
               size="sm"
@@ -217,7 +280,7 @@ export function SampleDrawer({
             </PillButton>
           </div>
           <span className="text-[12px] text-text-secondary">
-            Cursor limit: 20 • FSRS v4.5
+            Active recall • Spaced repetition
           </span>
         </div>
 
@@ -257,91 +320,133 @@ export function SampleDrawer({
           {mode === 'questions' ? (
             loadingQuestions ? (
               <div className="rounded-2xl border border-border-subtle bg-surface-card p-6 text-center text-[13px] text-text-secondary">
-                Querying indexed question bank...
+                Loading question bank...
+              </div>
+            ) : liveQuestions.length === 0 ? (
+              <div className="rounded-2xl border border-border-subtle bg-surface-card p-8 text-center">
+                <p className="text-[14px] font-medium text-text-primary">
+                  No matching questions found
+                </p>
+                <p className="mt-1.5 text-[13px] text-text-secondary">
+                  Try clearing your paper filter or search terms for {subject.name}.
+                </p>
               </div>
             ) : (
-              displayQuestions.map((q) => {
-                const isSchemeOpen = !!revealedSchemeIds[q.id];
-                const isBookmarked = !!bookmarkedIds[q.id];
+              <>
+                {liveQuestions.map((q) => {
+                  const isSchemeOpen = !!revealedSchemeIds[q.id];
+                  const isBookmarked = !!bookmarkedIds[q.id];
 
-                return (
-                  <div
-                    key={q.id}
-                    className="rounded-2xl border border-border-subtle bg-surface-card p-6 transition-colors hover:border-accent-blush/25"
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-border-subtle">
-                      <div className="flex items-center gap-2.5">
-                        <span className="text-[13px] font-medium text-text-primary">
-                          {q.session}
-                        </span>
-                        <span className="text-text-secondary">•</span>
-                        <span className="text-[13px] text-text-secondary">
-                          {q.topicLabel}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <StatusBadge
-                          label={`${q.maxMarks} marks`}
-                          active={false}
-                        />
-                        <button
-                          onClick={() => toggleBookmark(q.id)}
-                          className={cn(
-                            'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[12px] transition-colors',
-                            isBookmarked
-                              ? 'border-accent-blush/40 bg-accent-blush-glow text-accent-rose-hover'
-                              : 'border-border-subtle bg-surface-raised text-text-secondary hover:text-text-primary'
-                          )}
-                        >
-                          <Bookmark className="h-3 w-3" />
-                          {isBookmarked ? 'Saved' : 'Bookmark'}
-                        </button>
-                      </div>
-                    </div>
-
-                    <p className="mt-4 text-[15px] leading-[24px] text-text-primary">
-                      {q.promptMarkdown}
-                    </p>
-
-                    <div className="mt-5 flex items-center justify-between pt-4 border-t border-border-subtle">
-                      <span className="text-[12px] text-text-secondary">
-                        Paper {q.paper} • Difficulty {q.difficulty}/7
-                      </span>
-                      <PillButton
-                        size="sm"
-                        variant="secondary"
-                        onClick={() => toggleMarkScheme(q.id)}
-                      >
-                        {isSchemeOpen ? (
-                          <>
-                            <EyeOff className="h-3.5 w-3.5" />
-                            Hide Mark Scheme
-                          </>
-                        ) : (
-                          <>
-                            <Eye className="h-3.5 w-3.5" />
-                            Peek Mark Scheme
-                          </>
-                        )}
-                      </PillButton>
-                    </div>
-
-                    {isSchemeOpen && (
-                      <div className="mt-4 border-t border-border-subtle pt-4 text-[14px] leading-[22px] text-text-secondary space-y-1.5">
-                        <div className="text-[12px] font-medium uppercase tracking-wider text-accent-blush mb-2">
-                          Official Examiner Mark Scheme Notes
+                  return (
+                    <div
+                      key={q.id}
+                      className="rounded-2xl border border-border-subtle bg-surface-card p-6 transition-colors hover:border-accent-blush/25"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-border-subtle">
+                        <div className="flex items-center gap-2.5">
+                          <span className="text-[13px] font-medium text-text-primary">
+                            {q.session}
+                          </span>
+                          <span className="text-text-secondary">•</span>
+                          <span className="text-[13px] text-text-secondary">
+                            {q.topicLabel}
+                          </span>
                         </div>
-                        {q.markSchemeMarkdown.split('\n').map((line, idx) => (
-                          <p key={idx} className="text-text-primary/90">
-                            {line.replace(/^- /, '• ')}
-                          </p>
-                        ))}
+                        <div className="flex items-center gap-2">
+                          <StatusBadge
+                            label={`${q.maxMarks} marks`}
+                            active={false}
+                          />
+                          <button
+                            onClick={() => toggleBookmark(q.id)}
+                            className={cn(
+                              'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[12px] transition-colors',
+                              isBookmarked
+                                ? 'border-accent-blush/40 bg-accent-blush-glow text-accent-rose-hover'
+                                : 'border-border-subtle bg-surface-raised text-text-secondary hover:text-text-primary'
+                            )}
+                          >
+                            <Bookmark className="h-3 w-3" />
+                            {isBookmarked ? 'Saved' : 'Bookmark'}
+                          </button>
+                        </div>
                       </div>
-                    )}
+
+                      <div className="mt-4">
+                        <MathMarkdown content={q.promptMarkdown} />
+                      </div>
+
+                      {q.options && q.options.length > 0 && (
+                        <ul className="mt-4 space-y-1.5 text-[14px] text-text-secondary">
+                          {q.options.map((opt, idx) => (
+                            <li key={idx} className="leading-[22px]">
+                              {opt}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+
+                      <div className="mt-5 flex items-center justify-between pt-4 border-t border-border-subtle">
+                        <span className="text-[12px] text-text-secondary">
+                          Paper {q.paper} • Difficulty {q.difficulty}/7
+                        </span>
+                        <PillButton
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => toggleMarkScheme(q.id)}
+                        >
+                          {isSchemeOpen ? (
+                            <>
+                              <EyeOff className="h-3.5 w-3.5" />
+                              Hide Mark Scheme
+                            </>
+                          ) : (
+                            <>
+                              <Eye className="h-3.5 w-3.5" />
+                              Peek Mark Scheme
+                            </>
+                          )}
+                        </PillButton>
+                      </div>
+
+                      {isSchemeOpen && (
+                        <div className="mt-4 border-t border-border-subtle pt-4 text-[14px] leading-[22px] text-text-secondary space-y-1.5">
+                          <div className="text-[12px] font-medium uppercase tracking-wider text-accent-blush mb-2">
+                            Official Examiner Mark Scheme Notes
+                          </div>
+                          <MathMarkdown
+                            content={q.markSchemeMarkdown}
+                            className="text-[14px] leading-[22px] text-text-primary/90"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {nextCursor && (
+                  <div className="pt-2 text-center">
+                    <PillButton
+                      size="md"
+                      variant="secondary"
+                      onClick={handleLoadMore}
+                      disabled={loadingMore}
+                    >
+                      {loadingMore ? 'Loading more...' : 'Load more questions'}
+                    </PillButton>
                   </div>
-                );
-              })
+                )}
+              </>
             )
+          ) : displayCards.length === 0 ? (
+            <div className="rounded-2xl border border-border-subtle bg-surface-card p-8 text-center">
+              <p className="text-[14px] font-medium text-text-primary">
+                No flashcards yet for {subject.name}
+              </p>
+              <p className="mt-1.5 text-[13px] text-text-secondary">
+                Sample cards for this syllabus will appear here once added.
+              </p>
+            </div>
           ) : (
             displayCards.map((card) => {
               const isRevealed = !!revealedCardIds[card.id];

@@ -12,8 +12,8 @@ import { PillButton } from '@/components/ui/PillButton';
 const SYLLABI_DOT_COLORS = [
   'bg-accent-blush',
   'bg-amber-300/80',
-  'bg-sky-300/80',
-  'bg-indigo-300/80',
+  'bg-accent-rose-hover',
+  'bg-text-secondary',
   'bg-emerald-300/80',
   'bg-rose-300/80',
 ];
@@ -296,8 +296,8 @@ export default function LandingPage() {
             Begin your peaceful revision session.
           </h2>
           <p className="mx-auto mt-2 max-w-md text-[13px] leading-[20px] text-text-secondary">
-            No accounts required for basic drills. Open the question bank or
-            review due cards in seconds.
+            Sign in with Google or your candidate email to sync flashcards,
+            question bookmarks, and IB Core milestones.
           </p>
           <div className="mt-7">
             <PillButton href="/dashboard" variant="primary" size="lg">
